@@ -22,6 +22,7 @@
     #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
     .num-glow { text-shadow: 0 0 30px rgba(251,191,36,0.35); }
+    .num-glow-cyan { text-shadow: 0 0 30px rgba(56,189,248,0.35); }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col">
@@ -56,7 +57,7 @@
       <i class="ph-bold ph-caret-down text-sm"></i>
     </button>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full flex flex-col justify-center">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full flex flex-col justify-center">
 
       <!-- Notice banner if not configured -->
       <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm flex items-start justify-between gap-3 max-w-3xl mx-auto w-full">
@@ -64,39 +65,112 @@
           <i class="ph-fill ph-warning-circle text-amber-400 text-xl flex-shrink-0 mt-0.5"></i>
           <div>
             <p class="font-semibold">ยังไม่ได้ระบุ Google Apps Script Web App URL</p>
-            <p class="text-xs text-amber-200/80 mt-1">กดปุ่ม <strong>"ตั้งค่า"</strong> ด้านบน หรือใส่ URL ในตัวแปร <code>DEFAULT_API_URL</code> ในโค้ด</p>
+            <p class="text-xs text-amber-200/80 mt-1">กดปุ่ม <strong>"ตั้งค่า"</strong> ด้านบน เพื่อใส่ URL ของชุดที่ 1 หรือชุดที่ 2</p>
           </div>
         </div>
         <button onclick="toggleConfigModal()" class="text-xs font-semibold px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-indigo-950 rounded-lg transition flex-shrink-0">ใส่ URL</button>
       </div>
 
-      <!-- Hero -->
-      <section class="text-center mb-10">
+      <!-- Hero Title -->
+      <section class="text-center mb-6">
         <p class="text-amber-300 text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
         <h1 class="text-3xl sm:text-4xl font-bold">ยอดผู้ร่วมกิจกรรมของเรา</h1>
       </section>
 
-      <!-- Headline stats -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4 max-w-3xl mx-auto w-full">
-        <button onclick="toggleConfigModal()" class="glass rounded-3xl p-7 text-center hover:bg-white/10 transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วม">
-          <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
-            <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
-          </div>
-          <div id="stat-participants" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">-</div>
-          <div id="participants-note" class="text-xs text-slate-400 mt-2">คน</div>
-        </button>
-        <div class="glass rounded-3xl p-7 text-center">
-          <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
-            <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit ทั้งหมด
-          </div>
-          <div id="stat-submissions" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">0</div>
-          <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
+      <!-- View Selector (แท็บเลือกแสดงผล: ทั้ง 2 ชุด / ชุดที่ 1 / ชุดที่ 2) -->
+      <section class="flex justify-center mb-8">
+        <div class="glass p-1.5 rounded-2xl flex items-center gap-1.5 shadow-lg">
+          <button id="tab-btn-both" onclick="setViewMode('both')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+            <i class="ph-bold ph-squares-four text-base"></i>
+            <span>แสดงทั้ง 2 ชุด</span>
+          </button>
+          <button id="tab-btn-1" onclick="setViewMode('set1')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+            <i class="ph-bold ph-number-circle-one text-base text-amber-400"></i>
+            <span id="tab-title-1">ชุดที่ 1</span>
+          </button>
+          <button id="tab-btn-2" onclick="setViewMode('set2')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+            <i class="ph-bold ph-number-circle-two text-base text-sky-400"></i>
+            <span id="tab-title-2">ชุดที่ 2</span>
+          </button>
         </div>
       </section>
-      <p class="text-center text-xs text-slate-400">
-        <span id="live-dot" class="inline-block w-2 h-2 rounded-full bg-slate-500 mr-1 align-middle"></span>
-        <span id="live-label">ยังไม่เชื่อมต่อ</span>
-        <span class="mx-1">•</span> อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
+
+      <!-- Container แสดงชุดข้อมูล (รองรับทั้ง 1 ชุด และ 2 ชุด) -->
+      <div id="sets-wrapper" class="w-full">
+        <div id="sets-grid" class="grid grid-cols-1 gap-8 w-full transition-all duration-300">
+
+          <!-- ชุดที่ 1 -->
+          <section id="section-set1" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+                <h2 id="display-label-1" class="text-lg font-bold text-amber-300">ชุดที่ 1</h2>
+              </div>
+              <div class="text-xs text-slate-400 flex items-center gap-1">
+                <span id="live-dot-1" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
+                <span id="live-label-1">รอเชื่อมต่อ</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- ผู้เข้าร่วม ชุดที่ 1 -->
+              <button onclick="openConfigForSet(1)" class="bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
+                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+                  <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
+                </div>
+                <div id="stat-participants-1" class="num-glow text-5xl sm:text-6xl font-bold text-amber-300" data-value="0">-</div>
+                <div id="participants-note-1" class="text-xs text-slate-400 mt-2">คน</div>
+              </button>
+              <!-- ยอด submit ชุดที่ 1 -->
+              <div class="bg-white/5 border border-white/5 rounded-2xl p-6 text-center">
+                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+                  <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
+                </div>
+                <div id="stat-submissions-1" class="num-glow text-5xl sm:text-6xl font-bold text-amber-300" data-value="0">0</div>
+                <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ชุดที่ 2 -->
+          <section id="section-set2" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50"></span>
+                <h2 id="display-label-2" class="text-lg font-bold text-sky-300">ชุดที่ 2</h2>
+              </div>
+              <div class="text-xs text-slate-400 flex items-center gap-1">
+                <span id="live-dot-2" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
+                <span id="live-label-2">รอเชื่อมต่อ</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- ผู้เข้าร่วม ชุดที่ 2 -->
+              <button onclick="openConfigForSet(2)" class="bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
+                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+                  <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
+                </div>
+                <div id="stat-participants-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold text-sky-300" data-value="0">-</div>
+                <div id="participants-note-2" class="text-xs text-slate-400 mt-2">คน</div>
+              </button>
+              <!-- ยอด submit ชุดที่ 2 -->
+              <div class="bg-white/5 border border-white/5 rounded-2xl p-6 text-center">
+                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+                  <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
+                </div>
+                <div id="stat-submissions-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold text-sky-300" data-value="0">0</div>
+                <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-slate-400 mt-8">
+        อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
+        <span class="mx-1">•</span> ตรวจสอบข้อมูลอัตโนมัติทุก 1 วินาที
       </p>
 
       <!-- Error Box -->
@@ -117,32 +191,77 @@
   </div>
 
   <!-- Toast: new submissions -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-amber-400 text-indigo-950 font-semibold text-sm shadow-2xl transition-all duration-500 opacity-0 translate-y-4 pointer-events-none"></div>
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-amber-400 text-indigo-950 font-semibold text-sm shadow-2xl transition-all duration-500 opacity-0 translate-y-4 pointer-events-none max-w-md text-center"></div>
 
   <!-- Modal Configuration -->
-  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-white/10">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-base font-bold flex items-center gap-2"><i class="ph-bold ph-gear text-amber-400"></i>ตั้งค่า</h3>
+  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/10 my-8">
+      <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
+        <h3 class="text-base font-bold flex items-center gap-2"><i class="ph-bold ph-gear text-amber-400"></i>ตั้งค่าแบบฟอร์มทั้ง 2 ชุด</h3>
         <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-200"><i class="ph-bold ph-x text-lg"></i></button>
       </div>
 
-      <label for="modal-participants" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
-      <input type="number" min="0" step="1" id="modal-participants" placeholder="เช่น 120"
-        class="w-full mb-4 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-
-      <label for="modal-api-url" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL</label>
-      <input type="url" id="modal-api-url" placeholder="https://script.google.com/macros/s/.../exec"
-        class="w-full mb-4 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-
-      <label for="modal-firework-loops" class="block text-xs font-medium text-slate-300 mb-1">จำนวนลูปการยิงพลุ (ต่อการฉลอง 1 ครั้ง)</label>
-      <div class="flex items-center gap-3 mb-5">
-        <input type="number" min="1" max="50" step="1" id="modal-firework-loops" oninput="updateLoopsHint()"
-          class="w-24 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-        <span id="loops-hint" class="text-[11px] text-slate-400"></span>
+      <!-- Config Set 1 -->
+      <div class="p-4 rounded-2xl bg-white/5 border border-amber-400/20 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <h4 class="text-sm font-semibold text-amber-300">ชุดที่ 1</h4>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label for="modal-label-1" class="block text-xs font-medium text-slate-300 mb-1">ชื่อป้ายกำกับชุดที่ 1</label>
+            <input type="text" id="modal-label-1" placeholder="ชุดที่ 1"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+          <div>
+            <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+            <input type="number" min="0" step="1" id="modal-participants-1" placeholder="เช่น 100"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+          <div>
+            <label for="modal-api-url-1" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 1)</label>
+            <input type="url" id="modal-api-url-1" placeholder="https://script.google.com/macros/s/.../exec"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+        </div>
       </div>
 
-      <div class="flex justify-between items-center gap-2">
+      <!-- Config Set 2 -->
+      <div class="p-4 rounded-2xl bg-white/5 border border-sky-400/20 mb-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+          <h4 class="text-sm font-semibold text-sky-300">ชุดที่ 2</h4>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label for="modal-label-2" class="block text-xs font-medium text-slate-300 mb-1">ชื่อป้ายกำกับชุดที่ 2</label>
+            <input type="text" id="modal-label-2" placeholder="ชุดที่ 2"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+            <input type="number" min="0" step="1" id="modal-participants-2" placeholder="เช่น 100"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label for="modal-api-url-2" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 2)</label>
+            <input type="url" id="modal-api-url-2" placeholder="https://script.google.com/macros/s/.../exec"
+              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+        </div>
+      </div>
+
+      <!-- General Fireworks Settings -->
+      <div class="mb-5">
+        <label for="modal-firework-loops" class="block text-xs font-medium text-slate-300 mb-1">จำนวนลูปการยิงพลุ (ต่อการฉลอง 1 ครั้ง)</label>
+        <div class="flex items-center gap-3">
+          <input type="number" min="1" max="50" step="1" id="modal-firework-loops" oninput="updateLoopsHint()"
+            class="w-24 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <span id="loops-hint" class="text-[11px] text-slate-400"></span>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center gap-2 pt-2 border-t border-white/10">
         <button onclick="testFireworks()" class="px-3 py-2 text-xs font-medium text-amber-300 hover:bg-white/10 rounded-lg transition flex items-center gap-1">
           <i class="ph-bold ph-sparkle"></i>ทดสอบพลุ
         </button>
@@ -184,7 +303,7 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // ---------- Confetti (โปรยเบาๆ ตลอดเวลา) ----------
+    // ---------- Confetti ----------
     const COUNT = reduceMotion ? 60 : 160;
     const confetti = new THREE.InstancedMesh(
       new THREE.PlaneGeometry(0.22, 0.38),
@@ -195,7 +314,7 @@
 
     const particles = Array.from({ length: COUNT }, (_, i) => {
       confetti.setColorAt(i, palette[i % palette.length]);
-      const drift = rand(0.012, 0.035);         // ความเร็วตกปกติ
+      const drift = rand(0.012, 0.035);
       return {
         x: rand(-halfW, halfW), y: rand(-halfH, halfH), z: rand(-6, 4),
         vx: 0, vy: -drift, drift,
@@ -205,7 +324,6 @@
     });
     const dummy = new THREE.Object3D();
 
-    // ยิงคอนเฟตตีขึ้นจากด้านล่าง แล้วค่อยๆ กลับมาโปรยลงตามปกติ
     window.celebrate = function () {
       if (reduceMotion) return;
       particles.forEach(p => {
@@ -218,7 +336,6 @@
 
     function updateConfetti(time) {
       particles.forEach((p, i) => {
-        // ค่อยๆ ปรับความเร็วกลับสู่การโปรยลงแบบนุ่มนวล
         p.vy += (-p.drift - p.vy) * 0.025;
         p.vx *= 0.97;
         p.x += p.vx + Math.sin(time + p.sway) * 0.008;
@@ -237,8 +354,7 @@
       confetti.instanceMatrix.needsUpdate = true;
     }
 
-    // ---------- Fireworks (พลุ) ----------
-    // ใช้ pool ของจุดแสงชุดเดียว: จรวดพุ่งขึ้น -> ระเบิดเป็นประกายแล้วจางหาย
+    // ---------- Fireworks ----------
     const MAX = 5000;
     const fwPos = new Float32Array(MAX * 3).fill(9999);
     const fwCol = new Float32Array(MAX * 3);
@@ -289,7 +405,6 @@
       const n = 140;
       const second = Math.random() < 0.4 ? palette[Math.floor(Math.random() * palette.length)] : r.color;
       for (let i = 0; i < n; i++) {
-        // ทิศทางสุ่มบนทรงกลม
         const u = rand(-1, 1), th = rand(0, Math.PI * 2), s = Math.sqrt(1 - u * u);
         const speed = rand(0.16, 0.24);
         spawn({
@@ -313,7 +428,6 @@
         let fade;
         if (p.kind === 'rocket') {
           fade = 1;
-          // หางประกายเล็กๆ ระหว่างพุ่ง
           spawn({ kind: 'trail', color: p.color, x: p.x, y: p.y, z: p.z,
                   vx: rand(-0.01, 0.01), vy: -0.02, vz: 0, life: 18 });
           if (p.vy <= 0.05) { p.alive = false; explode(p); }
@@ -334,8 +448,6 @@
       fwGeo.attributes.color.needsUpdate = true;
     }
 
-    // โชว์พลุแบบหลายลูป: 1 ลูป = ยิงหนึ่งชุด (salvo) ในช่วง SALVO_MS
-    // ถ้าถูกเรียกซ้ำระหว่างโชว์ จะต่อเวลาโชว์เดิมแทนการซ้อนกัน
     const SALVO_MS = 2500;
     let loopsLeft = 0, showTimer = null, shotsPerLoop = 6;
 
@@ -363,31 +475,56 @@
     }
     requestAnimationFrame(tick);
 
-    // ถ้าข้อมูลโหลดเสร็จก่อนฉากพร้อม ให้ยิงตามคำขอที่ค้างไว้
     if (window.__pendingCelebrate) window.celebrate();
   </script>
 
   <!-- App logic -->
   <script>
-    // คุณสามารถนำ Web App URL มาใส่ตรงนี้ได้โดยตรง หรือกรอกผ่านปุ่ม "ตั้งค่า" บนหน้าเว็บ
-    const DEFAULT_API_URL = "";
-    // ยอดผู้เข้าร่วมเริ่มต้น (ใส่ตัวเลขที่นี่เพื่อให้ผู้ชมทุกเครื่องเห็นค่าเดียวกัน) — null = ยังไม่กำหนด
-    const DEFAULT_PARTICIPANTS = null;
+    // การตั้งค่าเริ่มต้นในโค้ด (สามารถแก้ไขค่าที่นี่ หรือกรอกผ่านปุ่มตั้งค่า)
+    const DEFAULT_CONFIG = {
+      set1: { label: "ชุดที่ 1", url: "", participants: null },
+      set2: { label: "ชุดที่ 2", url: "", participants: null }
+    };
 
-    const REFRESH_MS = 1000;            // ดึงข้อมูลทุก 1 วินาที (นับจากคำขอก่อนหน้าเสร็จ)
-    const FIREWORK_EVERY_N = 5;         // ตรวจยอด submit ทุกๆ 5 รอบการรีเฟรช
-    const DEFAULT_FIREWORK_LOOPS = 4;   // จำนวนลูปการยิงพลุเริ่มต้น (ลูปละ ~2.5 วินาที)
+    const REFRESH_MS = 1000;
+    const FIREWORK_EVERY_N = 5;
+    const DEFAULT_FIREWORK_LOOPS = 4;
 
     let refreshCount = 0;
-    let checkpointSubmissions = null;   // ยอด submit ณ จุดตรวจล่าสุด
-    let firstLoad = true;
+    let firstLoad1 = true;
+    let firstLoad2 = true;
+    let checkpointSubmissions1 = null;
+    let checkpointSubmissions2 = null;
 
-    const getApiUrl = () => localStorage.getItem("gas_api_url") || DEFAULT_API_URL;
+    // View Mode: 'both' | 'set1' | 'set2'
+    let currentViewMode = localStorage.getItem("active_view_mode") || "both";
 
-    function getParticipants() {
-      const saved = localStorage.getItem("participants_total");
+    function getSetLabel(setId) {
+      return localStorage.getItem(`dataset_label_${setId}`) || DEFAULT_CONFIG[`set${setId}`].label;
+    }
+
+    function getApiUrl(setId) {
+      // Backward compatibility: ถ้าเคยเก็บ gas_api_url อันเก่า ให้ถือเป็นชุดที่ 1
+      if (setId === 1) {
+        return localStorage.getItem("gas_api_url_1") || localStorage.getItem("gas_api_url") || DEFAULT_CONFIG.set1.url;
+      }
+      return localStorage.getItem(`gas_api_url_${setId}`) || DEFAULT_CONFIG[`set${setId}`].url;
+    }
+
+    function getParticipants(setId) {
+      const saved = localStorage.getItem(`participants_total_${setId}`);
       if (saved !== null && saved !== "") return Number(saved);
-      return DEFAULT_PARTICIPANTS;
+      // Backward compatibility ชุดที่ 1
+      if (setId === 1) {
+        const legacy = localStorage.getItem("participants_total");
+        if (legacy !== null && legacy !== "") return Number(legacy);
+      }
+      return DEFAULT_CONFIG[`set${setId}`].participants;
+    }
+
+    function getFireworkLoops() {
+      const n = Number(localStorage.getItem("firework_loops"));
+      return Number.isInteger(n) && n >= 1 ? n : DEFAULT_FIREWORK_LOOPS;
     }
 
     function animateNumber(el, to) {
@@ -404,17 +541,65 @@
       requestAnimationFrame(step);
     }
 
-    function renderParticipants() {
-      const el = document.getElementById("stat-participants");
-      const note = document.getElementById("participants-note");
-      const value = getParticipants();
-      if (value === null || Number.isNaN(value)) {
-        el.textContent = "-";
-        el.dataset.value = 0;
-        note.textContent = "กดเพื่อกรอกยอดผู้เข้าร่วม";
-      } else {
-        animateNumber(el, value);
-        note.textContent = "คน";
+    function renderLabels() {
+      const l1 = getSetLabel(1);
+      const l2 = getSetLabel(2);
+      document.getElementById("tab-title-1").textContent = l1;
+      document.getElementById("tab-title-2").textContent = l2;
+      document.getElementById("display-label-1").textContent = l1;
+      document.getElementById("display-label-2").textContent = l2;
+    }
+
+    function renderParticipantsAll() {
+      [1, 2].forEach(setId => {
+        const el = document.getElementById(`stat-participants-${setId}`);
+        const note = document.getElementById(`participants-note-${setId}`);
+        const val = getParticipants(setId);
+        if (val === null || Number.isNaN(val)) {
+          el.textContent = "-";
+          el.dataset.value = 0;
+          note.textContent = "กดเพื่อกรอกยอด";
+        } else {
+          animateNumber(el, val);
+          note.textContent = "คน";
+        }
+      });
+    }
+
+    // สลับโหมดการแสดงผล (ทั้ง 2 ชุด / ชุดที่ 1 / ชุดที่ 2)
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      localStorage.setItem("active_view_mode", mode);
+
+      const sec1 = document.getElementById("section-set1");
+      const sec2 = document.getElementById("section-set2");
+      const grid = document.getElementById("sets-grid");
+      const wrapper = document.getElementById("sets-wrapper");
+
+      const btnBoth = document.getElementById("tab-btn-both");
+      const btn1 = document.getElementById("tab-btn-1");
+      const btn2 = document.getElementById("tab-btn-2");
+
+      const activeClass = "bg-amber-400 text-indigo-950 font-bold shadow-md";
+      const inactiveClass = "text-slate-300 hover:text-white hover:bg-white/10";
+
+      [btnBoth, btn1, btn2].forEach(b => b.className = "px-4 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 " + inactiveClass);
+
+      if (mode === "both") {
+        btnBoth.className = "px-4 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 " + activeClass;
+        sec1.classList.remove("hidden");
+        sec2.classList.remove("hidden");
+        grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mx-auto transition-all duration-300";
+      } else if (mode === "set1") {
+        btn1.className = "px-4 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 " + activeClass;
+        sec1.classList.remove("hidden");
+        sec2.classList.add("hidden");
+        grid.className = "grid grid-cols-1 gap-6 w-full max-w-3xl mx-auto transition-all duration-300";
+      } else if (mode === "set2") {
+        btn2.className = "px-4 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 " + activeClass;
+        sec1.classList.add("hidden");
+        sec2.classList.remove("hidden");
+        grid.className = "grid grid-cols-1 gap-6 w-full max-w-3xl mx-auto transition-all duration-300";
       }
     }
 
@@ -423,21 +608,26 @@
       t.textContent = msg;
       t.classList.remove("opacity-0", "translate-y-4");
       clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(() => t.classList.add("opacity-0", "translate-y-4"), 3500);
+      showToast._timer = setTimeout(() => t.classList.add("opacity-0", "translate-y-4"), 4000);
     }
 
-    function setLive(ok, label) {
-      document.getElementById("live-dot").className =
-        "inline-block w-2 h-2 rounded-full mr-1 align-middle " + (ok ? "bg-emerald-400 animate-pulse" : "bg-slate-500");
-      document.getElementById("live-label").textContent = label;
+    function setLive(setId, ok, label) {
+      const dot = document.getElementById(`live-dot-${setId}`);
+      const txt = document.getElementById(`live-label-${setId}`);
+      dot.className = "inline-block w-2 h-2 rounded-full " + (ok ? "bg-emerald-400 animate-pulse" : "bg-slate-500");
+      txt.textContent = label;
     }
 
-    function onSubmissions(submissions) {
-      animateNumber(document.getElementById("stat-submissions"), submissions);
+    function onSubmissions(setId, submissions) {
+      animateNumber(document.getElementById(`stat-submissions-${setId}`), submissions);
 
-      if (firstLoad) {
-        firstLoad = false;
-        checkpointSubmissions = submissions;
+      const label = getSetLabel(setId);
+      const isFirst = setId === 1 ? firstLoad1 : firstLoad2;
+
+      if (isFirst) {
+        if (setId === 1) { firstLoad1 = false; checkpointSubmissions1 = submissions; }
+        else { firstLoad2 = false; checkpointSubmissions2 = submissions; }
+
         if (submissions > 0) {
           if (window.celebrate) window.celebrate();
           else window.__pendingCelebrate = true;
@@ -445,21 +635,19 @@
         return;
       }
 
-      // ทุกๆ 5 รอบ: ถ้ายอด submit เพิ่มขึ้นจากจุดตรวจก่อนหน้า -> ยิงพลุ
-      refreshCount++;
+      // เมื่อตรวจครบ 5 รอบรีเฟรช
       if (refreshCount % FIREWORK_EVERY_N === 0) {
-        const diff = submissions - checkpointSubmissions;
-        if (diff > 0) {
-          window.fireworks?.(getFireworkLoops(), Math.min(4 + diff, 10));
-          showToast(`🎆 มีผู้ตอบใหม่ +${diff}`);
+        const prev = setId === 1 ? checkpointSubmissions1 : checkpointSubmissions2;
+        if (prev !== null) {
+          const diff = submissions - prev;
+          if (diff > 0) {
+            window.fireworks?.(getFireworkLoops(), Math.min(4 + diff, 10));
+            showToast(`🎆 [${label}] มีผู้ตอบใหม่ +${diff}`);
+          }
         }
-        checkpointSubmissions = submissions;
+        if (setId === 1) checkpointSubmissions1 = submissions;
+        else checkpointSubmissions2 = submissions;
       }
-    }
-
-    function getFireworkLoops() {
-      const n = Number(localStorage.getItem("firework_loops"));
-      return Number.isInteger(n) && n >= 1 ? n : DEFAULT_FIREWORK_LOOPS;
     }
 
     function readLoopsInput() {
@@ -476,76 +664,133 @@
 
     function toggleConfigModal() {
       const modal = document.getElementById("config-modal");
-      document.getElementById("modal-api-url").value = getApiUrl();
-      const p = getParticipants();
-      document.getElementById("modal-participants").value = p === null ? "" : p;
+      document.getElementById("modal-label-1").value = getSetLabel(1);
+      document.getElementById("modal-label-2").value = getSetLabel(2);
+
+      const p1 = getParticipants(1);
+      const p2 = getParticipants(2);
+      document.getElementById("modal-participants-1").value = p1 === null ? "" : p1;
+      document.getElementById("modal-participants-2").value = p2 === null ? "" : p2;
+
+      document.getElementById("modal-api-url-1").value = getApiUrl(1);
+      document.getElementById("modal-api-url-2").value = getApiUrl(2);
+
       document.getElementById("modal-firework-loops").value = getFireworkLoops();
       updateLoopsHint();
       modal.classList.toggle("hidden");
     }
 
+    function openConfigForSet(setId) {
+      toggleConfigModal();
+      setTimeout(() => {
+        const target = document.getElementById(`modal-participants-${setId}`);
+        if (target) { target.focus(); target.select(); }
+      }, 100);
+    }
+
     function saveConfig() {
-      const url = document.getElementById("modal-api-url").value.trim();
-      if (url) localStorage.setItem("gas_api_url", url);
-      else localStorage.removeItem("gas_api_url");
+      // Set 1
+      const l1 = document.getElementById("modal-label-1").value.trim() || "ชุดที่ 1";
+      localStorage.setItem("dataset_label_1", l1);
+      const url1 = document.getElementById("modal-api-url-1").value.trim();
+      if (url1) localStorage.setItem("gas_api_url_1", url1);
+      else { localStorage.removeItem("gas_api_url_1"); localStorage.removeItem("gas_api_url"); }
+      const p1 = document.getElementById("modal-participants-1").value.trim();
+      if (p1 !== "" && Number(p1) >= 0) localStorage.setItem("participants_total_1", String(Math.floor(Number(p1))));
+      else { localStorage.removeItem("participants_total_1"); localStorage.removeItem("participants_total"); }
 
-      const p = document.getElementById("modal-participants").value.trim();
-      if (p !== "" && Number(p) >= 0) localStorage.setItem("participants_total", String(Math.floor(Number(p))));
-      else localStorage.removeItem("participants_total");
+      // Set 2
+      const l2 = document.getElementById("modal-label-2").value.trim() || "ชุดที่ 2";
+      localStorage.setItem("dataset_label_2", l2);
+      const url2 = document.getElementById("modal-api-url-2").value.trim();
+      if (url2) localStorage.setItem("gas_api_url_2", url2);
+      else localStorage.removeItem("gas_api_url_2");
+      const p2 = document.getElementById("modal-participants-2").value.trim();
+      if (p2 !== "" && Number(p2) >= 0) localStorage.setItem("participants_total_2", String(Math.floor(Number(p2))));
+      else localStorage.removeItem("participants_total_2");
 
+      // Fireworks loops
       const loops = readLoopsInput();
       if (loops) localStorage.setItem("firework_loops", String(loops));
       else localStorage.removeItem("firework_loops");
 
       toggleConfigModal();
-      renderParticipants();
+      renderLabels();
+      renderParticipantsAll();
+      fetchBothData();
     }
 
-    // ทดสอบด้วยจำนวนลูปที่กรอกอยู่ในช่อง (ยังไม่ต้องกดบันทึก)
     function testFireworks() {
       const loops = readLoopsInput() || getFireworkLoops();
       toggleConfigModal();
       window.fireworks?.(loops, 6);
     }
 
-    async function fetchData() {
-      const url = getApiUrl();
-      const errorBox = document.getElementById("error-box");
-      document.getElementById("notice-banner").classList.toggle("hidden", !!url);
-      if (!url) { setLive(false, "ยังไม่เชื่อมต่อ"); return; }
+    async function fetchOneSet(setId) {
+      const url = getApiUrl(setId);
+      if (!url) {
+        setLive(setId, false, "ยังไม่ได้ใส่ URL");
+        return { ok: false, missing: true };
+      }
 
       try {
         const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const result = await response.json();
-        if (result.status !== "success") throw new Error(result.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
+        if (result.status !== "success") throw new Error(result.message || "Invalid JSON");
 
-        // รองรับทั้ง Apps Script แบบส่งเฉพาะยอด ({ total }) และแบบส่งข้อมูลทั้งหมด ({ data: [...] })
         const submissions = typeof result.total === "number"
           ? result.total
           : Array.isArray(result.data) ? result.data.length : null;
-        if (submissions === null) throw new Error("ไม่พบ total หรือ data ในข้อมูลตอบกลับ");
 
-        onSubmissions(submissions);
-        errorBox.classList.add("hidden");
-        setLive(true, "LIVE");
-        document.getElementById("last-updated").textContent = new Date().toLocaleTimeString("th-TH");
+        if (submissions === null) throw new Error("ไม่พบ total หรือ data");
+
+        onSubmissions(setId, submissions);
+        setLive(setId, true, "LIVE");
+        return { ok: true, submissions };
       } catch (err) {
-        console.error("Fetch error:", err);
-        document.getElementById("error-message").textContent =
-          err.message + " (กรุณาตรวจสอบว่าตั้งค่าสิทธิ์ Apps Script เป็น 'Anyone' หรือยัง)";
-        errorBox.classList.remove("hidden");
-        setLive(false, "ขาดการเชื่อมต่อ");
+        console.error(`Fetch set ${setId} error:`, err);
+        setLive(setId, false, "ขัดข้อง");
+        return { ok: false, error: err.message };
       }
     }
 
-    // วนดึงข้อมูล: รอคำขอก่อนหน้าเสร็จก่อนเสมอ เพื่อไม่ให้คำขอซ้อนกัน
+    async function fetchBothData() {
+      const u1 = getApiUrl(1);
+      const u2 = getApiUrl(2);
+      const noticeBanner = document.getElementById("notice-banner");
+      const errorBox = document.getElementById("error-box");
+
+      if (!u1 && !u2) {
+        noticeBanner.classList.remove("hidden");
+        return;
+      }
+      noticeBanner.classList.add("hidden");
+
+      refreshCount++;
+
+      const [res1, res2] = await Promise.all([fetchOneSet(1), fetchOneSet(2)]);
+
+      const errors = [];
+      if (!res1.ok && !res1.missing) errors.push(`[${getSetLabel(1)}]: ${res1.error}`);
+      if (!res2.ok && !res2.missing) errors.push(`[${getSetLabel(2)}]: ${res2.error}`);
+
+      if (errors.length > 0) {
+        document.getElementById("error-message").textContent = errors.join(" | ") + " (โปรดตรวจสิทธิ์ Apps Script เป็น 'Anyone')";
+        errorBox.classList.remove("hidden");
+      } else {
+        errorBox.classList.add("hidden");
+      }
+
+      document.getElementById("last-updated").textContent = new Date().toLocaleTimeString("th-TH");
+    }
+
     async function pollLoop() {
-      if (!document.hidden) await fetchData();
+      if (!document.hidden) await fetchBothData();
       setTimeout(pollLoop, REFRESH_MS);
     }
 
-    // แสดง/ซ่อนแถบด้านบน และจำค่าไว้ในเบราว์เซอร์
+    // Toggle Header
     function toggleHeader(show) {
       document.getElementById("top-bar").classList.toggle("hidden", !show);
       const btn = document.getElementById("show-header-btn");
@@ -554,7 +799,6 @@
       localStorage.setItem("header_hidden", show ? "0" : "1");
     }
 
-    // กด H เพื่อสลับแสดง/ซ่อน (ยกเว้นตอนพิมพ์ในช่องกรอก)
     document.addEventListener("keydown", (e) => {
       if (e.code !== "KeyH" || e.ctrlKey || e.metaKey || e.altKey) return;
       if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
@@ -563,7 +807,9 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       toggleHeader(localStorage.getItem("header_hidden") !== "1");
-      renderParticipants();
+      renderLabels();
+      renderParticipantsAll();
+      setViewMode(currentViewMode);
       pollLoop();
     });
   </script>
