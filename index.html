@@ -16,6 +16,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
     :root {
       --font-scale: 100%;
+      --size-set-title: 20px;
+      --size-metric-label: 14px;
+      --size-stat-number: 64px;
+      --size-unit-label: 12px;
     }
     html {
       font-size: var(--font-scale);
@@ -24,7 +28,8 @@
       font-family: 'Prompt', sans-serif;
       transition: background 0.3s ease, color 0.3s ease;
     }
-    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    /* #bg elevated to z-20 so confetti and fireworks burst in front of cards without being obscured */
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
 
     /* === DARK THEME (DEFAULT) === */
     body.theme-dark {
@@ -89,35 +94,35 @@
       color: #38bdf8;
     }
 
-    /* === BRIGHT THEME === */
+    /* === BRIGHT THEME (โปร่งแสง สวยใส ไม่บังพลุ) === */
     body.theme-bright {
       background: radial-gradient(ellipse at top, #e0e7ff 0%, #f1f5f9 45%, #f8fafc 100%);
       background-attachment: fixed;
       color: #1e293b;
     }
     body.theme-bright .glass {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(203, 213, 225, 0.7);
-      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow: 0 10px 30px -5px rgba(30, 41, 59, 0.07);
     }
     body.theme-bright .sub-card {
-      background: rgba(248, 250, 252, 0.95);
-      border: 1px solid rgba(226, 232, 240, 0.9);
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.45);
     }
     body.theme-bright .sub-card:hover {
-      background: #ffffff;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+      background: rgba(255, 255, 255, 0.45);
+      box-shadow: 0 4px 14px rgba(30, 41, 59, 0.08);
     }
     body.theme-bright .card-header-border {
-      border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     }
     body.theme-bright .sub-label-text {
-      color: #475569;
+      color: #334155;
     }
     body.theme-bright .sub-note-text {
-      color: #64748b;
+      color: #475569;
     }
     body.theme-bright .hero-title {
       color: #0f172a;
@@ -126,11 +131,11 @@
       color: #b45309;
     }
     body.theme-bright .top-btn {
-      background: rgba(15, 23, 42, 0.06);
-      color: #334155;
+      background: rgba(15, 23, 42, 0.08);
+      color: #1e293b;
     }
     body.theme-bright .top-btn:hover {
-      background: rgba(15, 23, 42, 0.12);
+      background: rgba(15, 23, 42, 0.16);
       color: #0f172a;
     }
     body.theme-bright .num-glow {
@@ -154,7 +159,7 @@
       color: #0284c7;
     }
     body.theme-bright #top-bar {
-      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     }
     body.theme-bright footer {
       color: #64748b;
@@ -225,8 +230,8 @@
           <section id="section-set1" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
             <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(1, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
-                <h2 id="display-label-1" class="text-lg font-bold group-hover:opacity-80 transition">ชุดที่ 1</h2>
+                <span class="w-3.5 h-3.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50 flex-shrink-0"></span>
+                <h2 id="display-label-1" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 1</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
               <div class="text-xs sub-note-text flex items-center gap-1">
@@ -237,20 +242,20 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- ผู้เข้าร่วม ชุดที่ 1 -->
-              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
-                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
-                  <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
+              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>ผู้เข้าร่วมทั้งหมด</span>
                 </div>
-                <div id="stat-participants-1" class="num-glow text-5xl sm:text-6xl font-bold" data-value="0">-</div>
-                <div id="participants-note-1" class="text-xs sub-note-text mt-2">คน</div>
+                <div id="stat-participants-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="participants-note-1" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
               <!-- ยอด submit ชุดที่ 1 -->
-              <div class="sub-card rounded-2xl p-6 text-center transition">
-                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
-                  <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>ยอดการ Submit</span>
                 </div>
-                <div id="stat-submissions-1" class="num-glow text-5xl sm:text-6xl font-bold" data-value="0">0</div>
-                <div class="text-xs sub-note-text mt-2">ครั้ง</div>
+                <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
               </div>
             </div>
           </section>
@@ -259,8 +264,8 @@
           <section id="section-set2" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
             <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(2, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span class="w-3 h-3 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50"></span>
-                <h2 id="display-label-2" class="text-lg font-bold group-hover:opacity-80 transition">ชุดที่ 2</h2>
+                <span class="w-3.5 h-3.5 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50 flex-shrink-0"></span>
+                <h2 id="display-label-2" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 2</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
               <div class="text-xs sub-note-text flex items-center gap-1">
@@ -271,20 +276,20 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- ผู้เข้าร่วม ชุดที่ 2 -->
-              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
-                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
-                  <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
+              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>ผู้เข้าร่วมทั้งหมด</span>
                 </div>
-                <div id="stat-participants-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold" data-value="0">-</div>
-                <div id="participants-note-2" class="text-xs sub-note-text mt-2">คน</div>
+                <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="participants-note-2" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
               <!-- ยอด submit ชุดที่ 2 -->
-              <div class="sub-card rounded-2xl p-6 text-center transition">
-                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
-                  <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>ยอดการ Submit</span>
                 </div>
-                <div id="stat-submissions-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold" data-value="0">0</div>
-                <div class="text-xs sub-note-text mt-2">ครั้ง</div>
+                <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
               </div>
             </div>
           </section>
@@ -318,143 +323,232 @@
   <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-amber-400 text-indigo-950 font-semibold text-sm shadow-2xl transition-all duration-500 opacity-0 translate-y-4 pointer-events-none max-w-md text-center"></div>
 
   <!-- Modal Configuration -->
-  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/10 my-8">
-      <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
-        <h3 class="text-base font-bold flex items-center gap-2"><i class="ph-bold ph-gear text-amber-400"></i>ตั้งค่าแบบฟอร์มทั้ง 2 ชุด</h3>
-        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-200"><i class="ph-bold ph-x text-lg"></i></button>
+  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-slate-900 text-slate-100 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-white/10 my-auto max-h-[92vh] flex flex-col" style="font-size: 15px;">
+      <!-- Modal Header (Sticky/Fixed) -->
+      <div class="flex justify-between items-center pb-3 border-b border-white/10 flex-shrink-0 mb-4">
+        <h3 class="text-base font-bold flex items-center gap-2 text-white"><i class="ph-bold ph-gear text-amber-400"></i>ตั้งค่าแบบฟอร์มทั้ง 2 ชุด</h3>
+        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition" title="ปิดหน้าต่าง"><i class="ph-bold ph-x text-lg"></i></button>
       </div>
 
-      <!-- Display Mode Selector (moved into settings) -->
-      <div class="p-4 rounded-2xl bg-white/5 border border-white/10 mb-5">
-        <label class="block text-xs font-semibold text-slate-200 mb-2.5 flex items-center gap-1.5">
-          <i class="ph-bold ph-layout text-amber-400"></i>เลือกชุดที่ต้องการแสดงผลบนหน้าจอ
-        </label>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
-            <input type="radio" name="modal-view-mode" value="both" class="text-amber-400 focus:ring-0" />
-            <span class="text-xs font-medium text-slate-200">แสดงทั้ง 2 ชุด</span>
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 overflow-y-auto pr-1.5 space-y-4">
+        <!-- Display Mode Selector (moved into settings) -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+          <label class="block text-xs font-semibold text-slate-200 mb-2.5 flex items-center gap-1.5">
+            <i class="ph-bold ph-layout text-amber-400"></i>เลือกชุดที่ต้องการแสดงผลบนหน้าจอ
           </label>
-          <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
-            <input type="radio" name="modal-view-mode" value="set1" class="text-amber-400 focus:ring-0" />
-            <span id="modal-view-label-1" class="text-xs font-medium text-slate-200 truncate">ชุดที่ 1</span>
-          </label>
-          <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-sky-400/20 has-[:checked]:border-sky-400">
-            <input type="radio" name="modal-view-mode" value="set2" class="text-sky-400 focus:ring-0" />
-            <span id="modal-view-label-2" class="text-xs font-medium text-slate-200 truncate">ชุดที่ 2</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Appearance: Theme & Font Scaling -->
-      <div class="p-4 rounded-2xl bg-white/5 border border-white/10 mb-5 space-y-4">
-        <!-- Theme Selection -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-200 mb-2 flex items-center gap-1.5">
-            <i class="ph-bold ph-palette text-amber-400"></i>ธีมสีหน้าจอ (Theme)
-          </label>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
-              <input type="radio" name="modal-theme" value="dark" onchange="applyTheme('dark')" class="text-amber-400 focus:ring-0" />
-              <i class="ph-bold ph-moon text-indigo-400 text-sm"></i>
-              <span class="text-xs font-medium text-slate-200">ธีมมืด (Dark)</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+              <input type="radio" name="modal-view-mode" value="both" class="text-amber-400 focus:ring-0" />
+              <span class="text-xs font-medium text-slate-200">แสดงทั้ง 2 ชุด</span>
             </label>
-            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
-              <input type="radio" name="modal-theme" value="bright" onchange="applyTheme('bright')" class="text-amber-400 focus:ring-0" />
-              <i class="ph-bold ph-sun text-amber-400 text-sm"></i>
-              <span class="text-xs font-medium text-slate-200">ธีมสว่าง (Bright)</span>
+            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+              <input type="radio" name="modal-view-mode" value="set1" class="text-amber-400 focus:ring-0" />
+              <span id="modal-view-label-1" class="text-xs font-medium text-slate-200 truncate">ชุดที่ 1</span>
+            </label>
+            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center sm:flex-col sm:justify-center gap-2 text-center transition hover:bg-white/5 has-[:checked]:bg-sky-400/20 has-[:checked]:border-sky-400">
+              <input type="radio" name="modal-view-mode" value="set2" class="text-sky-400 focus:ring-0" />
+              <span id="modal-view-label-2" class="text-xs font-medium text-slate-200 truncate">ชุดที่ 2</span>
             </label>
           </div>
         </div>
 
-        <!-- Font Scale Slider -->
-        <div>
-          <div class="flex justify-between items-center mb-1.5">
-            <label for="modal-font-scale" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-              <i class="ph-bold ph-text-aa text-amber-400"></i>ขนาดตัวอักษรทั้งหมด (Font Scale)
+        <!-- Appearance: Theme & Font Scaling -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+          <!-- Theme Selection -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-200 mb-2 flex items-center gap-1.5">
+              <i class="ph-bold ph-palette text-amber-400"></i>ธีมสีหน้าจอ (Theme)
             </label>
-            <span id="font-scale-badge" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 text-xs font-bold">100%</span>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+                <input type="radio" name="modal-theme" value="dark" onchange="applyTheme('dark')" class="text-amber-400 focus:ring-0" />
+                <i class="ph-bold ph-moon text-indigo-400 text-sm"></i>
+                <span class="text-xs font-medium text-slate-200">ธีมมืด (Dark)</span>
+              </label>
+              <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+                <input type="radio" name="modal-theme" value="bright" onchange="applyTheme('bright')" class="text-amber-400 focus:ring-0" />
+                <i class="ph-bold ph-sun text-amber-400 text-sm"></i>
+                <span class="text-xs font-medium text-slate-200">ธีมสว่าง (Bright)</span>
+              </label>
+            </div>
           </div>
-          <input 
-            type="range" 
-            id="modal-font-scale" 
-            min="75" 
-            max="150" 
-            step="5" 
-            value="100" 
-            oninput="handleFontScaleInput(this.value)"
-            class="w-full accent-amber-400 cursor-pointer mb-2" 
-          />
-          <div class="grid grid-cols-4 gap-1 text-[11px]">
-            <button type="button" onclick="handleFontScaleInput(85)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">เล็ก (85%)</button>
-            <button type="button" onclick="handleFontScaleInput(100)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ปกติ (100%)</button>
-            <button type="button" onclick="handleFontScaleInput(115)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ใหญ่ (115%)</button>
-            <button type="button" onclick="handleFontScaleInput(130)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ใหญ่พิเศษ (130%)</button>
+
+          <!-- Overall Font Scale Slider -->
+          <div class="pt-2 border-t border-white/10">
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="modal-font-scale" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                <i class="ph-bold ph-text-aa text-amber-400"></i>ขนาดภาพรวมทั้งจอ (Overall Scale)
+              </label>
+              <span id="font-scale-badge" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 text-xs font-bold">100%</span>
+            </div>
+            <input 
+              type="range" 
+              id="modal-font-scale" 
+              min="75" 
+              max="150" 
+              step="5" 
+              value="100" 
+              oninput="handleFontScaleInput(this.value)"
+              class="w-full accent-amber-400 cursor-pointer mb-2" 
+            />
+            <div class="grid grid-cols-4 gap-1 text-[11px]">
+              <button type="button" onclick="handleFontScaleInput(85)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">85%</button>
+              <button type="button" onclick="handleFontScaleInput(100)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">100%</button>
+              <button type="button" onclick="handleFontScaleInput(115)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">115%</button>
+              <button type="button" onclick="handleFontScaleInput(130)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">130%</button>
+            </div>
+          </div>
+
+          <!-- Specific Element Font Size Sliders (Per circled items in request) -->
+          <div class="pt-3 border-t border-white/10 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                <i class="ph-bold ph-sliders-horizontal text-amber-400"></i>ปรับขนาดตัวอักษรเฉพาะจุด (ตามที่วงในรูป)
+              </label>
+              <button type="button" onclick="resetCustomFontSizes()" class="text-[11px] text-amber-400 hover:text-amber-300 hover:underline">
+                รีเซ็ตค่าเริ่มต้น
+              </button>
+            </div>
+
+            <!-- 1. Set Title -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">1. หัวข้อชุด (เช่น Beginner / ชุดที่ 1)</span>
+                <span id="badge-size-set-title" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">20px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-set-title" 
+                min="14" 
+                max="48" 
+                step="1" 
+                value="20" 
+                oninput="handleSpecificSizeInput('set_title', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+
+            <!-- 2. Metric Label -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">2. ป้ายข้อความ (เช่น ผู้เข้าร่วมทั้งหมด, ยอดการ Submit)</span>
+                <span id="badge-size-metric-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">14px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-metric-label" 
+                min="11" 
+                max="32" 
+                step="1" 
+                value="14" 
+                oninput="handleSpecificSizeInput('metric_label', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+
+            <!-- 3. Stat Number -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">3. ตัวเลขสถิติ (เช่น 100, 3)</span>
+                <span id="badge-size-stat-number" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">64px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-stat-number" 
+                min="32" 
+                max="110" 
+                step="2" 
+                value="64" 
+                oninput="handleSpecificSizeInput('stat_number', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+
+            <!-- 4. Unit Label -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">4. หน่วยกำกับ (เช่น คน, ครั้ง)</span>
+                <span id="badge-size-unit-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">12px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-unit-label" 
+                min="10" 
+                max="30" 
+                step="1" 
+                value="12" 
+                oninput="handleSpecificSizeInput('unit_label', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Config Set 1 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-amber-400/20">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <h4 id="modal-header-label-1" class="text-sm font-semibold text-amber-300">ชุดที่ 1</h4>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label for="modal-label-1" class="block text-xs font-medium text-slate-300 mb-1">ข้อความหัวข้อชุดที่ 1 (Title ที่แสดงบนหน้าจอ)</label>
+              <input type="text" id="modal-label-1" placeholder="ชุดที่ 1" oninput="onLabelInput()"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+            <div>
+              <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+              <input type="number" min="0" step="1" id="modal-participants-1" placeholder="เช่น 100"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+            <div>
+              <label for="modal-api-url-1" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 1)</label>
+              <input type="url" id="modal-api-url-1" placeholder="https://script.google.com/macros/s/.../exec"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Config Set 2 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-sky-400/20">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+            <h4 id="modal-header-label-2" class="text-sm font-semibold text-sky-300">ชุดที่ 2</h4>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label for="modal-label-2" class="block text-xs font-medium text-slate-300 mb-1">ข้อความหัวข้อชุดที่ 2 (Title ที่แสดงบนหน้าจอ)</label>
+              <input type="text" id="modal-label-2" placeholder="ชุดที่ 2" oninput="onLabelInput()"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+              <input type="number" min="0" step="1" id="modal-participants-2" placeholder="เช่น 100"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label for="modal-api-url-2" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 2)</label>
+              <input type="url" id="modal-api-url-2" placeholder="https://script.google.com/macros/s/.../exec"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+        </div>
+
+        <!-- General Fireworks Settings -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+          <label for="modal-firework-loops" class="block text-xs font-medium text-slate-300 mb-1">จำนวนลูปการยิงพลุ (ต่อการฉลอง 1 ครั้ง)</label>
+          <div class="flex items-center gap-3">
+            <input type="number" min="1" max="50" step="1" id="modal-firework-loops" oninput="updateLoopsHint()"
+              class="w-24 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            <span id="loops-hint" class="text-[11px] text-slate-400"></span>
           </div>
         </div>
       </div>
 
-      <!-- Config Set 1 -->
-      <div class="p-4 rounded-2xl bg-white/5 border border-amber-400/20 mb-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-          <h4 id="modal-header-label-1" class="text-sm font-semibold text-amber-300">ชุดที่ 1</h4>
-        </div>
-        <div class="space-y-3">
-          <div>
-            <label for="modal-label-1" class="block text-xs font-medium text-slate-300 mb-1">ข้อความหัวข้อชุดที่ 1 (Title ที่แสดงบนหน้าจอ)</label>
-            <input type="text" id="modal-label-1" placeholder="ชุดที่ 1" oninput="onLabelInput()"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-          <div>
-            <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
-            <input type="number" min="0" step="1" id="modal-participants-1" placeholder="เช่น 100"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-          <div>
-            <label for="modal-api-url-1" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 1)</label>
-            <input type="url" id="modal-api-url-1" placeholder="https://script.google.com/macros/s/.../exec"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Config Set 2 -->
-      <div class="p-4 rounded-2xl bg-white/5 border border-sky-400/20 mb-5">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-          <h4 id="modal-header-label-2" class="text-sm font-semibold text-sky-300">ชุดที่ 2</h4>
-        </div>
-        <div class="space-y-3">
-          <div>
-            <label for="modal-label-2" class="block text-xs font-medium text-slate-300 mb-1">ข้อความหัวข้อชุดที่ 2 (Title ที่แสดงบนหน้าจอ)</label>
-            <input type="text" id="modal-label-2" placeholder="ชุดที่ 2" oninput="onLabelInput()"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          </div>
-          <div>
-            <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
-            <input type="number" min="0" step="1" id="modal-participants-2" placeholder="เช่น 100"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          </div>
-          <div>
-            <label for="modal-api-url-2" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 2)</label>
-            <input type="url" id="modal-api-url-2" placeholder="https://script.google.com/macros/s/.../exec"
-              class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          </div>
-        </div>
-      </div>
-
-      <!-- General Fireworks Settings -->
-      <div class="mb-5">
-        <label for="modal-firework-loops" class="block text-xs font-medium text-slate-300 mb-1">จำนวนลูปการยิงพลุ (ต่อการฉลอง 1 ครั้ง)</label>
-        <div class="flex items-center gap-3">
-          <input type="number" min="1" max="50" step="1" id="modal-firework-loops" oninput="updateLoopsHint()"
-            class="w-24 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          <span id="loops-hint" class="text-[11px] text-slate-400"></span>
-        </div>
-      </div>
-
-      <div class="flex justify-between items-center gap-2 pt-2 border-t border-white/10">
+      <!-- Modal Footer (Sticky/Fixed) -->
+      <div class="flex justify-between items-center gap-2 pt-3 border-t border-white/10 flex-shrink-0 mt-3">
         <button onclick="testFireworks()" class="px-3 py-2 text-xs font-medium text-amber-300 hover:bg-white/10 rounded-lg transition flex items-center gap-1">
           <i class="ph-bold ph-sparkle"></i>ทดสอบพลุ
         </button>
@@ -727,6 +821,56 @@
       applyFontScale(Number(val));
     }
 
+    // ขนาดตัวอักษรเฉพาะจุด (4 จุดที่วงในรูป: Set Title, Metric Label, Stat Number, Unit Label)
+    const DEFAULT_SPECIFIC_SIZES = {
+      set_title: 20,
+      metric_label: 14,
+      stat_number: 64,
+      unit_label: 12
+    };
+
+    const SPECIFIC_SIZE_VARS = {
+      set_title: "--size-set-title",
+      metric_label: "--size-metric-label",
+      stat_number: "--size-stat-number",
+      unit_label: "--size-unit-label"
+    };
+
+    function getSpecificSize(type) {
+      const saved = localStorage.getItem(`font_size_${type}`);
+      const val = Number(saved);
+      return Number.isFinite(val) && val > 0 ? val : DEFAULT_SPECIFIC_SIZES[type];
+    }
+
+    function applySpecificSize(type, val) {
+      const num = Number(val);
+      const varName = SPECIFIC_SIZE_VARS[type];
+      if (varName) {
+        document.documentElement.style.setProperty(varName, `${num}px`);
+      }
+      const badge = document.getElementById(`badge-size-${type.replace('_', '-')}`);
+      if (badge) badge.textContent = `${num}px`;
+      const input = document.getElementById(`input-size-${type.replace('_', '-')}`);
+      if (input) input.value = num;
+      localStorage.setItem(`font_size_${type}`, String(num));
+    }
+
+    function handleSpecificSizeInput(type, val) {
+      applySpecificSize(type, val);
+    }
+
+    function resetCustomFontSizes() {
+      Object.keys(DEFAULT_SPECIFIC_SIZES).forEach(type => {
+        applySpecificSize(type, DEFAULT_SPECIFIC_SIZES[type]);
+      });
+    }
+
+    function initAllSpecificSizes() {
+      Object.keys(DEFAULT_SPECIFIC_SIZES).forEach(type => {
+        applySpecificSize(type, getSpecificSize(type));
+      });
+    }
+
     function getSetLabel(setId) {
       return localStorage.getItem(`dataset_label_${setId}`) || DEFAULT_CONFIG[`set${setId}`].label;
     }
@@ -915,6 +1059,16 @@
 
       document.getElementById("modal-firework-loops").value = getFireworkLoops();
       updateLoopsHint();
+
+      // Specific Font Sizes (4 จุดที่วง)
+      Object.keys(DEFAULT_SPECIFIC_SIZES).forEach(type => {
+        const val = getSpecificSize(type);
+        const input = document.getElementById(`input-size-${type.replace('_', '-')}`);
+        const badge = document.getElementById(`badge-size-${type.replace('_', '-')}`);
+        if (input) input.value = val;
+        if (badge) badge.textContent = `${val}px`;
+      });
+
       modal.classList.toggle("hidden");
     }
 
@@ -1055,6 +1209,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       applyTheme(currentTheme);
       applyFontScale(currentFontScale);
+      initAllSpecificSizes();
       toggleHeader(localStorage.getItem("header_hidden") !== "1");
       renderLabels();
       renderParticipantsAll();
