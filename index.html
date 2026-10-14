@@ -21,6 +21,12 @@
       --size-metric-label: 14px;
       --size-stat-number: 64px;
       --size-unit-label: 12px;
+      --color-set-1: #fcd34d;
+      --color-set-2: #38bdf8;
+      --color-set-1-glow: rgba(251, 191, 36, 0.35);
+      --color-set-2-glow: rgba(56, 189, 248, 0.35);
+      --color-set-1-border: rgba(245, 158, 11, 0.45);
+      --color-set-2-border: rgba(14, 165, 233, 0.45);
     }
     html {
       font-size: var(--font-scale);
@@ -75,24 +81,20 @@
       color: #ffffff;
     }
     body.theme-dark .num-glow {
-      text-shadow: 0 0 30px rgba(251, 191, 36, 0.35);
+      text-shadow: 0 0 30px var(--color-set-1-glow, rgba(251, 191, 36, 0.35));
     }
     body.theme-dark .num-glow-cyan {
-      text-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+      text-shadow: 0 0 30px var(--color-set-2-glow, rgba(56, 189, 248, 0.35));
     }
-    body.theme-dark #display-label-1 {
-      color: #fcd34d;
+    #display-label-1,
+    #stat-participants-1,
+    #stat-submissions-1 {
+      color: var(--color-set-1);
     }
-    body.theme-dark #display-label-2 {
-      color: #7dd3fc;
-    }
-    body.theme-dark #stat-participants-1,
-    body.theme-dark #stat-submissions-1 {
-      color: #fcd34d;
-    }
-    body.theme-dark #stat-participants-2,
-    body.theme-dark #stat-submissions-2 {
-      color: #38bdf8;
+    #display-label-2,
+    #stat-participants-2,
+    #stat-submissions-2 {
+      color: var(--color-set-2);
     }
 
     /* === BRIGHT THEME (สว่าง สดใส กรอบชัด คอนทราสต์สวยงาม ไม่กลืน) === */
@@ -125,16 +127,16 @@
         inset 0 1px 0 rgba(255, 255, 255, 1);
     }
     body.theme-bright #section-set1 {
-      border: 1.5px solid rgba(245, 158, 11, 0.45);
+      border: 1.5px solid var(--color-set-1-border, rgba(245, 158, 11, 0.45));
       box-shadow: 
-        0 20px 35px -8px rgba(245, 158, 11, 0.16),
+        0 20px 35px -8px var(--color-set-1-glow, rgba(245, 158, 11, 0.16)),
         0 6px 16px -2px rgba(15, 23, 42, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 1);
     }
     body.theme-bright #section-set2 {
-      border: 1.5px solid rgba(14, 165, 233, 0.45);
+      border: 1.5px solid var(--color-set-2-border, rgba(14, 165, 233, 0.45));
       box-shadow: 
-        0 20px 35px -8px rgba(14, 165, 233, 0.16),
+        0 20px 35px -8px var(--color-set-2-glow, rgba(14, 165, 233, 0.16)),
         0 6px 16px -2px rgba(15, 23, 42, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 1);
     }
@@ -173,24 +175,10 @@
       color: #0f172a;
     }
     body.theme-bright .num-glow {
-      text-shadow: 0 2px 10px rgba(245, 158, 11, 0.18);
+      text-shadow: 0 2px 10px var(--color-set-1-glow, rgba(245, 158, 11, 0.18));
     }
     body.theme-bright .num-glow-cyan {
-      text-shadow: 0 2px 10px rgba(2, 132, 199, 0.18);
-    }
-    body.theme-bright #display-label-1 {
-      color: #b45309;
-    }
-    body.theme-bright #display-label-2 {
-      color: #0369a1;
-    }
-    body.theme-bright #stat-participants-1,
-    body.theme-bright #stat-submissions-1 {
-      color: #d97706;
-    }
-    body.theme-bright #stat-participants-2,
-    body.theme-bright #stat-submissions-2 {
-      color: #0284c7;
+      text-shadow: 0 2px 10px var(--color-set-2-glow, rgba(2, 132, 199, 0.18));
     }
     body.theme-bright #notice-banner {
       background: rgba(254, 243, 199, 0.9);
@@ -272,7 +260,7 @@
           <section id="section-set1" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
             <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(1, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span class="w-3.5 h-3.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50 flex-shrink-0"></span>
+                <span id="set-dot-1" class="w-3.5 h-3.5 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-1); box-shadow: 0 0 10px var(--color-set-1-glow);"></span>
                 <h2 id="display-label-1" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 1</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
@@ -306,7 +294,7 @@
           <section id="section-set2" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
             <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(2, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span class="w-3.5 h-3.5 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50 flex-shrink-0"></span>
+                <span id="set-dot-2" class="w-3.5 h-3.5 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-2); box-shadow: 0 0 10px var(--color-set-2-glow);"></span>
                 <h2 id="display-label-2" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 2</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
@@ -557,6 +545,94 @@
                 oninput="handleSpecificSizeInput('unit_label', this.value)"
                 class="w-full accent-amber-400 cursor-pointer" 
               />
+            </div>
+          </div>
+        </div>
+
+        <!-- Font Colors for Each Set (การตั้งค่าสีตัวอักษรแยก 2 ชุด) -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <i class="ph-bold ph-palette text-amber-400"></i>สีตัวอักษรแยกตามชุด (Font Color)
+            </label>
+            <button type="button" onclick="resetSetColors()" class="text-[11px] text-amber-400 hover:text-amber-300 hover:underline">
+              รีเซ็ตสีเริ่มต้น
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Setting 1: Font Color Set 1 -->
+            <div class="bg-slate-800/60 p-3 rounded-xl border border-white/5 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                  <span id="preview-dot-set-1" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  การตั้งค่าที่ 1: สีชุดที่ 1
+                </span>
+                <span id="label-color-val-1" class="text-[11px] font-mono text-slate-400">#FCD34D</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input 
+                  type="color" 
+                  id="modal-color-set-1" 
+                  value="#fcd34d" 
+                  oninput="handleSetColorInput(1, this.value)"
+                  class="w-10 h-8 rounded-lg bg-transparent border border-white/10 cursor-pointer" 
+                  title="คลิกเพื่อเลือกสีชุดที่ 1"
+                />
+                <input 
+                  type="text" 
+                  id="modal-color-text-1" 
+                  value="#FCD34D" 
+                  maxlength="7" 
+                  onchange="handleSetColorInput(1, this.value)"
+                  class="w-24 px-2 py-1 text-xs bg-slate-900 border border-white/10 rounded-lg text-slate-100 font-mono focus:outline-none focus:ring-1 focus:ring-amber-400 uppercase" 
+                  title="ใส่รหัสสี Hex"
+                />
+                <!-- Preset color swatches -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <button type="button" onclick="handleSetColorInput(1, '#fcd34d')" class="w-5 h-5 rounded-full bg-[#fcd34d] hover:scale-110 transition border border-white/20" title="ทอง / เหลือง"></button>
+                  <button type="button" onclick="handleSetColorInput(1, '#fb923c')" class="w-5 h-5 rounded-full bg-[#fb923c] hover:scale-110 transition border border-white/20" title="ส้ม"></button>
+                  <button type="button" onclick="handleSetColorInput(1, '#34d399')" class="w-5 h-5 rounded-full bg-[#34d399] hover:scale-110 transition border border-white/20" title="เขียว"></button>
+                  <button type="button" onclick="handleSetColorInput(1, '#f472b6')" class="w-5 h-5 rounded-full bg-[#f472b6] hover:scale-110 transition border border-white/20" title="ชมพู"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Setting 2: Font Color Set 2 -->
+            <div class="bg-slate-800/60 p-3 rounded-xl border border-white/5 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                  <span id="preview-dot-set-2" class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                  การตั้งค่าที่ 2: สีชุดที่ 2
+                </span>
+                <span id="label-color-val-2" class="text-[11px] font-mono text-slate-400">#38BDF8</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input 
+                  type="color" 
+                  id="modal-color-set-2" 
+                  value="#38bdf8" 
+                  oninput="handleSetColorInput(2, this.value)"
+                  class="w-10 h-8 rounded-lg bg-transparent border border-white/10 cursor-pointer" 
+                  title="คลิกเพื่อเลือกสีชุดที่ 2"
+                />
+                <input 
+                  type="text" 
+                  id="modal-color-text-2" 
+                  value="#38BDF8" 
+                  maxlength="7" 
+                  onchange="handleSetColorInput(2, this.value)"
+                  class="w-24 px-2 py-1 text-xs bg-slate-900 border border-white/10 rounded-lg text-slate-100 font-mono focus:outline-none focus:ring-1 focus:ring-sky-400 uppercase" 
+                  title="ใส่รหัสสี Hex"
+                />
+                <!-- Preset color swatches -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <button type="button" onclick="handleSetColorInput(2, '#38bdf8')" class="w-5 h-5 rounded-full bg-[#38bdf8] hover:scale-110 transition border border-white/20" title="ฟ้า"></button>
+                  <button type="button" onclick="handleSetColorInput(2, '#a78bfa')" class="w-5 h-5 rounded-full bg-[#a78bfa] hover:scale-110 transition border border-white/20" title="ม่วง"></button>
+                  <button type="button" onclick="handleSetColorInput(2, '#2dd4bf')" class="w-5 h-5 rounded-full bg-[#2dd4bf] hover:scale-110 transition border border-white/20" title="เขียวมิ้นต์"></button>
+                  <button type="button" onclick="handleSetColorInput(2, '#f87171')" class="w-5 h-5 rounded-full bg-[#f87171] hover:scale-110 transition border border-white/20" title="แดง"></button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -876,6 +952,7 @@
       const radio = document.querySelector(`input[name="modal-theme"][value="${theme}"]`);
       if (radio) radio.checked = true;
       localStorage.setItem("app_theme", theme);
+      if (typeof initAllSetColors === 'function') initAllSetColors();
     }
 
     function toggleTheme() {
@@ -966,6 +1043,85 @@
         const input = document.getElementById("modal-hero-title");
         if (input) { input.focus(); input.select(); }
       }, 100);
+    }
+
+    // Helper: แปลง Hex เป็น RGBA
+    function hexToRgba(hex, alpha = 0.35) {
+      if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) return `rgba(251, 191, 36, ${alpha})`;
+      const clean = hex.slice(1).trim();
+      const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
+      const num = parseInt(full, 16);
+      if (Number.isNaN(num)) return `rgba(251, 191, 36, ${alpha})`;
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // สีตัวอักษรเริ่มต้นตามธีม (เมื่อยังไม่ได้กำหนดเอง)
+    const DEFAULT_THEME_COLORS = {
+      dark: {
+        set1: "#fcd34d",
+        set2: "#38bdf8"
+      },
+      bright: {
+        set1: "#d97706",
+        set2: "#0284c7"
+      }
+    };
+
+    function getSetColor(setId) {
+      const saved = localStorage.getItem(`font_color_set_${setId}`);
+      if (saved) return saved;
+      return DEFAULT_THEME_COLORS[currentTheme]?.[`set${setId}`] || (setId === 1 ? "#fcd34d" : "#38bdf8");
+    }
+
+    function applySetColor(setId, color) {
+      document.documentElement.style.setProperty(`--color-set-${setId}`, color);
+      document.documentElement.style.setProperty(`--color-set-${setId}-glow`, hexToRgba(color, currentTheme === 'bright' ? 0.2 : 0.35));
+      document.documentElement.style.setProperty(`--color-set-${setId}-border`, hexToRgba(color, 0.45));
+
+      const dot = document.getElementById(`set-dot-${setId}`);
+      if (dot) {
+        dot.style.backgroundColor = color;
+        dot.style.boxShadow = `0 0 10px ${hexToRgba(color, 0.5)}`;
+      }
+
+      const picker = document.getElementById(`modal-color-set-${setId}`);
+      const textInput = document.getElementById(`modal-color-text-${setId}`);
+      const labelVal = document.getElementById(`label-color-val-${setId}`);
+      const previewDot = document.getElementById(`preview-dot-set-${setId}`);
+
+      if (picker) picker.value = color;
+      if (textInput) textInput.value = color.toUpperCase();
+      if (labelVal) labelVal.textContent = color.toUpperCase();
+      if (previewDot) previewDot.style.backgroundColor = color;
+    }
+
+    function handleSetColorInput(setId, val) {
+      if (!val) return;
+      let color = val.trim();
+      if (!color.startsWith('#')) color = '#' + color;
+      if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+        localStorage.setItem(`font_color_set_${setId}`, color);
+        applySetColor(setId, color);
+      } else if (/^#[0-9A-Fa-f]{3}$/.test(color)) {
+        const full = '#' + color.slice(1).split('').map(c => c + c).join('');
+        localStorage.setItem(`font_color_set_${setId}`, full);
+        applySetColor(setId, full);
+      }
+    }
+
+    function resetSetColors() {
+      localStorage.removeItem("font_color_set_1");
+      localStorage.removeItem("font_color_set_2");
+      initAllSetColors();
+    }
+
+    function initAllSetColors() {
+      [1, 2].forEach(setId => {
+        applySetColor(setId, getSetColor(setId));
+      });
     }
 
     function getSetLabel(setId) {
@@ -1171,6 +1327,9 @@
         if (badge) badge.textContent = `${val}px`;
       });
 
+      // Font Colors (2 ชุด)
+      initAllSetColors();
+
       modal.classList.toggle("hidden");
     }
 
@@ -1320,6 +1479,7 @@
       applyTheme(currentTheme);
       applyFontScale(currentFontScale);
       initAllSpecificSizes();
+      initAllSetColors();
       toggleHeader(localStorage.getItem("header_hidden") !== "1");
       renderHeroTitle();
       renderLabels();
