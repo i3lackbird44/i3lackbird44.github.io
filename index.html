@@ -133,7 +133,14 @@
 
       <label for="modal-api-url" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL</label>
       <input type="url" id="modal-api-url" placeholder="https://script.google.com/macros/s/.../exec"
-        class="w-full mb-5 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        class="w-full mb-4 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+
+      <label for="modal-firework-loops" class="block text-xs font-medium text-slate-300 mb-1">จำนวนลูปการยิงพลุ (ต่อการฉลอง 1 ครั้ง)</label>
+      <div class="flex items-center gap-3 mb-5">
+        <input type="number" min="1" max="50" step="1" id="modal-firework-loops" oninput="updateLoopsHint()"
+          class="w-24 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        <span id="loops-hint" class="text-[11px] text-slate-400"></span>
+      </div>
 
       <div class="flex justify-between items-center gap-2">
         <button onclick="testFireworks()" class="px-3 py-2 text-xs font-medium text-amber-300 hover:bg-white/10 rounded-lg transition flex items-center gap-1">
@@ -289,7 +296,7 @@
           kind: 'spark', color: i % 2 ? r.color : second,
           x: r.x, y: r.y, z: r.z,
           vx: s * Math.cos(th) * speed, vy: s * Math.sin(th) * speed, vz: u * speed,
-          life: rand(55, 85) | 0,
+          life: rand(80, 120) | 0,
         });
       }
     }
@@ -327,10 +334,26 @@
       fwGeo.attributes.color.needsUpdate = true;
     }
 
-    window.fireworks = function (shots = 6) {
+    // โชว์พลุแบบหลายลูป: 1 ลูป = ยิงหนึ่งชุด (salvo) ในช่วง SALVO_MS
+    // ถ้าถูกเรียกซ้ำระหว่างโชว์ จะต่อเวลาโชว์เดิมแทนการซ้อนกัน
+    const SALVO_MS = 2500;
+    let loopsLeft = 0, showTimer = null, shotsPerLoop = 6;
+
+    function runLoop() {
+      if (loopsLeft <= 0) { showTimer = null; return; }
+      loopsLeft--;
+      const gap = SALVO_MS / shotsPerLoop;
+      for (let i = 0; i < shotsPerLoop; i++) setTimeout(launchRocket, i * gap + rand(0, gap * 0.5));
+      showTimer = setTimeout(runLoop, SALVO_MS);
+    }
+
+    window.fireworks = function (loops = 3, shots = 6) {
       if (reduceMotion) return;
-      for (let i = 0; i < shots; i++) setTimeout(launchRocket, i * 350 + rand(0, 150));
+      shotsPerLoop = showTimer ? Math.max(shotsPerLoop, shots) : shots;
+      loopsLeft = Math.max(loopsLeft, loops);
+      if (!showTimer) runLoop();
     };
+    window.FIREWORK_SALVO_MS = SALVO_MS;
 
     function tick(t) {
       requestAnimationFrame(tick);
@@ -353,6 +376,7 @@
 
     const REFRESH_MS = 1000;            // ดึงข้อมูลทุก 1 วินาที (นับจากคำขอก่อนหน้าเสร็จ)
     const FIREWORK_EVERY_N = 5;         // ตรวจยอด submit ทุกๆ 5 รอบการรีเฟรช
+    const DEFAULT_FIREWORK_LOOPS = 4;   // จำนวนลูปการยิงพลุเริ่มต้น (ลูปละ ~2.5 วินาที)
 
     let refreshCount = 0;
     let checkpointSubmissions = null;   // ยอด submit ณ จุดตรวจล่าสุด
@@ -426,11 +450,28 @@
       if (refreshCount % FIREWORK_EVERY_N === 0) {
         const diff = submissions - checkpointSubmissions;
         if (diff > 0) {
-          window.fireworks?.(Math.min(4 + diff, 10));
+          window.fireworks?.(getFireworkLoops(), Math.min(4 + diff, 10));
           showToast(`🎆 มีผู้ตอบใหม่ +${diff}`);
         }
         checkpointSubmissions = submissions;
       }
+    }
+
+    function getFireworkLoops() {
+      const n = Number(localStorage.getItem("firework_loops"));
+      return Number.isInteger(n) && n >= 1 ? n : DEFAULT_FIREWORK_LOOPS;
+    }
+
+    function readLoopsInput() {
+      const n = Math.floor(Number(document.getElementById("modal-firework-loops").value));
+      return n >= 1 ? Math.min(n, 50) : null;
+    }
+
+    function updateLoopsHint() {
+      const n = readLoopsInput();
+      const salvo = (window.FIREWORK_SALVO_MS || 2500) / 1000;
+      document.getElementById("loops-hint").textContent =
+        n ? `ลูปละ ~${salvo} วินาที • รวม ≈ ${Math.round(n * salvo + 2)} วินาที` : "ใส่ตัวเลข 1–50";
     }
 
     function toggleConfigModal() {
@@ -438,6 +479,8 @@
       document.getElementById("modal-api-url").value = getApiUrl();
       const p = getParticipants();
       document.getElementById("modal-participants").value = p === null ? "" : p;
+      document.getElementById("modal-firework-loops").value = getFireworkLoops();
+      updateLoopsHint();
       modal.classList.toggle("hidden");
     }
 
@@ -450,13 +493,19 @@
       if (p !== "" && Number(p) >= 0) localStorage.setItem("participants_total", String(Math.floor(Number(p))));
       else localStorage.removeItem("participants_total");
 
+      const loops = readLoopsInput();
+      if (loops) localStorage.setItem("firework_loops", String(loops));
+      else localStorage.removeItem("firework_loops");
+
       toggleConfigModal();
       renderParticipants();
     }
 
+    // ทดสอบด้วยจำนวนลูปที่กรอกอยู่ในช่อง (ยังไม่ต้องกดบันทึก)
     function testFireworks() {
+      const loops = readLoopsInput() || getFireworkLoops();
       toggleConfigModal();
-      window.fireworks?.(6);
+      window.fireworks?.(loops, 6);
     }
 
     async function fetchData() {
