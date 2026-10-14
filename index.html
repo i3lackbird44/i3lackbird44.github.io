@@ -257,7 +257,10 @@
       <!-- Hero Title -->
       <section class="text-center mb-8">
         <p class="hero-subtitle text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
-        <h1 class="hero-title text-3xl sm:text-4xl font-bold">ยอดผู้ร่วมกิจกรรมของเรา</h1>
+        <div onclick="openConfigHeroTitle()" class="inline-flex items-center justify-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขหัวข้อหลัก">
+          <h1 id="hero-title-display" class="hero-title text-3xl sm:text-4xl font-bold group-hover:opacity-85 transition">ยอดผู้ร่วมกิจกรรมของเรา</h1>
+          <i class="ph-bold ph-pencil-simple text-sm opacity-40 group-hover:opacity-100 transition"></i>
+        </div>
       </section>
 
       <!-- Container แสดงชุดข้อมูล (รองรับทั้ง 1 ชุด และ 2 ชุด) -->
@@ -279,18 +282,18 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- ผู้เข้าร่วม ชุดที่ 1 -->
-              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
+              <!-- กำลังทำ ชุดที่ 1 -->
+              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดกำลังทำชุดที่ 1">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-users-three text-pink-400"></i><span>ผู้เข้าร่วมทั้งหมด</span>
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>กำลังทำ</span>
                 </div>
                 <div id="stat-participants-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                 <div id="participants-note-1" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
-              <!-- ยอด submit ชุดที่ 1 -->
+              <!-- เสร็จแล้ว ชุดที่ 1 -->
               <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>ยอดการ Submit</span>
+                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                 </div>
                 <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
                 <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
@@ -313,18 +316,18 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- ผู้เข้าร่วม ชุดที่ 2 -->
-              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
+              <!-- กำลังทำ ชุดที่ 2 -->
+              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดกำลังทำชุดที่ 2">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-users-three text-pink-400"></i><span>ผู้เข้าร่วมทั้งหมด</span>
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>กำลังทำ</span>
                 </div>
                 <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                 <div id="participants-note-2" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
-              <!-- ยอด submit ชุดที่ 2 -->
+              <!-- เสร็จแล้ว ชุดที่ 2 -->
               <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>ยอดการ Submit</span>
+                  <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                 </div>
                 <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
                 <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
@@ -371,6 +374,21 @@
 
       <!-- Modal Body (Scrollable) -->
       <div class="flex-1 overflow-y-auto pr-1.5 space-y-4">
+        <!-- Hero Title Configuration -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+          <label for="modal-hero-title" class="block text-xs font-semibold text-slate-200 mb-2 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i class="ph-bold ph-text-t text-amber-400"></i>ข้อความหัวข้อหลักบนหน้าจอ (Hero Title)
+            </span>
+          </label>
+          <input 
+            type="text" 
+            id="modal-hero-title" 
+            placeholder="เช่น ยอดผู้ร่วมกิจกรรมของเรา" 
+            class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" 
+          />
+        </div>
+
         <!-- Display Mode Selector (moved into settings) -->
         <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
           <label class="block text-xs font-semibold text-slate-200 mb-2.5 flex items-center gap-1.5">
@@ -471,7 +489,7 @@
             <!-- 2. Metric Label -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">2. ป้ายข้อความ (เช่น ผู้เข้าร่วมทั้งหมด, ยอดการ Submit)</span>
+                <span class="text-slate-300">2. ป้ายข้อความ (เช่น กำลังทำ, เสร็จแล้ว)</span>
                 <span id="badge-size-metric-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">14px</span>
               </div>
               <input 
@@ -537,7 +555,7 @@
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
             </div>
             <div>
-              <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+              <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดกำลังทำ (คน)</label>
               <input type="number" min="0" step="1" id="modal-participants-1" placeholder="เช่น 100"
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
             </div>
@@ -562,7 +580,7 @@
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
             </div>
             <div>
-              <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+              <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดกำลังทำ (คน)</label>
               <input type="number" min="0" step="1" id="modal-participants-2" placeholder="เช่น 100"
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
             </div>
@@ -909,6 +927,26 @@
       });
     }
 
+    // Hero Title (หัวข้อหลักบนหน้าจอ)
+    const DEFAULT_HERO_TITLE = "ยอดผู้ร่วมกิจกรรมของเรา";
+
+    function getHeroTitle() {
+      return localStorage.getItem("hero_title") || DEFAULT_HERO_TITLE;
+    }
+
+    function renderHeroTitle() {
+      const el = document.getElementById("hero-title-display");
+      if (el) el.textContent = getHeroTitle();
+    }
+
+    function openConfigHeroTitle() {
+      toggleConfigModal();
+      setTimeout(() => {
+        const input = document.getElementById("modal-hero-title");
+        if (input) { input.focus(); input.select(); }
+      }, 100);
+    }
+
     function getSetLabel(setId) {
       return localStorage.getItem(`dataset_label_${setId}`) || DEFAULT_CONFIG[`set${setId}`].label;
     }
@@ -1072,6 +1110,11 @@
 
     function toggleConfigModal() {
       const modal = document.getElementById("config-modal");
+
+      // Hero Title
+      const heroInput = document.getElementById("modal-hero-title");
+      if (heroInput) heroInput.value = getHeroTitle();
+
       document.getElementById("modal-label-1").value = getSetLabel(1);
       document.getElementById("modal-label-2").value = getSetLabel(2);
       onLabelInput();
@@ -1120,6 +1163,14 @@
     }
 
     function saveConfig() {
+      // Hero Title
+      const heroInput = document.getElementById("modal-hero-title");
+      if (heroInput) {
+        const val = heroInput.value.trim() || DEFAULT_HERO_TITLE;
+        localStorage.setItem("hero_title", val);
+        renderHeroTitle();
+      }
+
       // View Mode
       const selectedMode = document.querySelector('input[name="modal-view-mode"]:checked')?.value || "both";
       setViewMode(selectedMode);
@@ -1249,6 +1300,7 @@
       applyFontScale(currentFontScale);
       initAllSpecificSizes();
       toggleHeader(localStorage.getItem("header_hidden") !== "1");
+      renderHeroTitle();
       renderLabels();
       renderParticipantsAll();
       setViewMode(currentViewMode);
