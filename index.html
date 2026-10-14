@@ -32,7 +32,7 @@
   <div class="relative z-10 flex flex-col min-h-screen">
 
     <!-- Header -->
-    <header class="sticky top-0 z-30 glass border-x-0 border-t-0">
+    <header id="top-bar" class="sticky top-0 z-30 glass border-x-0 border-t-0">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center text-lg shadow-lg">
@@ -40,11 +40,21 @@
           </div>
           <span class="font-semibold text-sm sm:text-base">Form Celebration</span>
         </div>
-        <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
-          <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
+            <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
+          </button>
+          <button onclick="toggleHeader(false)" class="flex items-center justify-center w-8 h-8 text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ซ่อนแถบด้านบน (H)">
+            <i class="ph-bold ph-caret-up text-sm"></i>
+          </button>
+        </div>
       </div>
     </header>
+
+    <!-- ปุ่มลอยสำหรับแสดงแถบด้านบน (แสดงเฉพาะตอนแถบถูกซ่อน) -->
+    <button id="show-header-btn" onclick="toggleHeader(true)" class="hidden fixed top-3 right-3 z-40 w-9 h-9 items-center justify-center rounded-full glass text-slate-300 hover:text-white hover:bg-white/15 opacity-40 hover:opacity-100 transition" title="แสดงแถบด้านบน (H)">
+      <i class="ph-bold ph-caret-down text-sm"></i>
+    </button>
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full flex flex-col justify-center">
 
@@ -486,7 +496,24 @@
       setTimeout(pollLoop, REFRESH_MS);
     }
 
+    // แสดง/ซ่อนแถบด้านบน และจำค่าไว้ในเบราว์เซอร์
+    function toggleHeader(show) {
+      document.getElementById("top-bar").classList.toggle("hidden", !show);
+      const btn = document.getElementById("show-header-btn");
+      btn.classList.toggle("hidden", show);
+      btn.classList.toggle("flex", !show);
+      localStorage.setItem("header_hidden", show ? "0" : "1");
+    }
+
+    // กด H เพื่อสลับแสดง/ซ่อน (ยกเว้นตอนพิมพ์ในช่องกรอก)
+    document.addEventListener("keydown", (e) => {
+      if (e.code !== "KeyH" || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+      toggleHeader(document.getElementById("top-bar").classList.contains("hidden"));
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
+      toggleHeader(localStorage.getItem("header_hidden") !== "1");
       renderParticipants();
       pollLoop();
     });
