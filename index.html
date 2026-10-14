@@ -16,6 +16,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
     :root {
       --font-scale: 100%;
+      --size-hero-title: 36px;
       --size-set-title: 20px;
       --size-metric-label: 14px;
       --size-stat-number: 64px;
@@ -258,7 +259,7 @@
       <section class="text-center mb-8">
         <p class="hero-subtitle text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
         <div onclick="openConfigHeroTitle()" class="inline-flex items-center justify-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขหัวข้อหลัก">
-          <h1 id="hero-title-display" class="hero-title text-3xl sm:text-4xl font-bold group-hover:opacity-85 transition">ยอดผู้ร่วมกิจกรรมของเรา</h1>
+          <h1 id="hero-title-display" class="hero-title font-bold group-hover:opacity-85 transition leading-tight" style="font-size: var(--size-hero-title);">ยอดผู้ร่วมกิจกรรมของเรา</h1>
           <i class="ph-bold ph-pencil-simple text-sm opacity-40 group-hover:opacity-100 transition"></i>
         </div>
       </section>
@@ -468,10 +469,28 @@
               </button>
             </div>
 
-            <!-- 1. Set Title -->
+            <!-- 1. Hero Title -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">1. หัวข้อชุด (เช่น Beginner / ชุดที่ 1)</span>
+                <span class="text-slate-300">1. หัวข้อหลักหน้าจอ (Hero Title)</span>
+                <span id="badge-size-hero-title" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">36px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-hero-title" 
+                min="20" 
+                max="64" 
+                step="1" 
+                value="36" 
+                oninput="handleSpecificSizeInput('hero_title', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+
+            <!-- 2. Set Title -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">2. หัวข้อชุด (เช่น Beginner / ชุดที่ 1)</span>
                 <span id="badge-size-set-title" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">20px</span>
               </div>
               <input 
@@ -486,10 +505,10 @@
               />
             </div>
 
-            <!-- 2. Metric Label -->
+            <!-- 3. Metric Label -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">2. ป้ายข้อความ (เช่น กำลังทำ, เสร็จแล้ว)</span>
+                <span class="text-slate-300">3. ป้ายข้อความ (เช่น กำลังทำ, เสร็จแล้ว)</span>
                 <span id="badge-size-metric-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">14px</span>
               </div>
               <input 
@@ -504,10 +523,10 @@
               />
             </div>
 
-            <!-- 3. Stat Number -->
+            <!-- 4. Stat Number -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">3. ตัวเลขสถิติ (เช่น 100, 3)</span>
+                <span class="text-slate-300">4. ตัวเลขสถิติ (เช่น 100, 3)</span>
                 <span id="badge-size-stat-number" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">64px</span>
               </div>
               <input 
@@ -522,10 +541,10 @@
               />
             </div>
 
-            <!-- 4. Unit Label -->
+            <!-- 5. Unit Label -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">4. หน่วยกำกับ (เช่น คน, ครั้ง)</span>
+                <span class="text-slate-300">5. หน่วยกำกับ (เช่น คน, ครั้ง)</span>
                 <span id="badge-size-unit-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">12px</span>
               </div>
               <input 
@@ -877,8 +896,9 @@
       applyFontScale(Number(val));
     }
 
-    // ขนาดตัวอักษรเฉพาะจุด (4 จุดที่วงในรูป: Set Title, Metric Label, Stat Number, Unit Label)
+    // ขนาดตัวอักษรเฉพาะจุด (Hero Title, Set Title, Metric Label, Stat Number, Unit Label)
     const DEFAULT_SPECIFIC_SIZES = {
+      hero_title: 36,
       set_title: 20,
       metric_label: 14,
       stat_number: 64,
@@ -886,6 +906,7 @@
     };
 
     const SPECIFIC_SIZE_VARS = {
+      hero_title: "--size-hero-title",
       set_title: "--size-set-title",
       metric_label: "--size-metric-label",
       stat_number: "--size-stat-number",
