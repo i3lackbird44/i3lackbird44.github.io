@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Form Dashboard | GitHub Pages</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons for modern icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Prompt', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-100">
+          <i class="ph-bold ph-chart-bar"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900 leading-tight">Google Form Responses</h1>
+          <p class="text-xs text-slate-500">เชื่อมต่อและแสดงผลข้อมูลตอบกลับแบบ Real-time</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="config-btn" onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="ตั้งค่า Web App API">
+          <i class="ph-bold ph-gear text-sm"></i>
+          <span>ตั้งค่า URL</span>
+        </button>
+        <button id="refresh-btn" onclick="fetchData()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-lg shadow-sm transition">
+          <i class="ph-bold ph-arrows-clockwise text-sm" id="refresh-icon"></i>
+          <span>รีเฟรช</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    
+    <!-- Status / URL Notice banner if not configured -->
+    <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-start justify-between gap-3 shadow-sm">
+      <div class="flex items-start gap-3">
+        <i class="ph-fill ph-warning-circle text-amber-600 text-xl flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-semibold">ยังไม่ได้ระบุ Google Apps Script Web App URL</p>
+          <p class="text-xs text-amber-700 mt-1">คลิกที่ปุ่ม <strong>"ตั้งค่า URL"</strong> ด้านบน หรือใส่ URL ในตัวแปร <code>DEFAULT_API_URL</code> ในโค้ด</p>
+        </div>
+      </div>
+      <button onclick="toggleConfigModal()" class="text-xs font-semibold px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition flex-shrink-0">
+        ใส่ URL เดี๋ยวนี้
+      </button>
+    </div>
+
+    <!-- Stats & Search Controls -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <div class="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-xl">
+          <span class="text-xs text-indigo-600 font-medium">รายการทั้งหมด:</span>
+          <span id="total-count" class="text-lg font-bold text-indigo-700 ml-1">0</span>
+        </div>
+        <div class="text-xs text-slate-500">
+          อัปเดตล่าสุด: <span id="last-updated" class="font-medium text-slate-700">-</span>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="relative w-full md:w-72">
+        <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="ค้นหาข้อมูล..." 
+          oninput="handleSearch()"
+          class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+        />
+      </div>
+    </div>
+
+    <!-- Error Box -->
+    <div id="error-box" class="hidden mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+      <div class="flex items-start gap-3">
+        <i class="ph-fill ph-x-circle text-rose-600 text-xl flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-semibold">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
+          <p id="error-message" class="text-xs text-rose-700 mt-1"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skeleton Loading -->
+    <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
+        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
+        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
+        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+      </div>
+    </div>
+
+    <!-- Cards Container -->
+    <div id="cards-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Data cards will be dynamically injected here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+      <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl mb-3">
+        <i class="ph-bold ph-tray"></i>
+      </div>
+      <h3 class="text-base font-semibold text-slate-700">ยังไม่พบข้อมูล</h3>
+      <p class="text-xs text-slate-500 mt-1">ยังไม่มีคำตอบในแบบฟอร์ม หรือไม่ตรงกับคำค้นหาของคุณ</p>
+    </div>
+
+  </main>
+
+  <!-- Modal Configuration -->
+  <div id="config-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <i class="ph-bold ph-link text-indigo-600"></i>
+          ตั้งค่า Google Apps Script URL
+        </h3>
+        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      
+      <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+        ระบุ Web App URL ที่ได้จากการ Deploy ใน Google Apps Script (ขึ้นต้นด้วย <code>https://script.google.com/macros/s/.../exec</code>)
+      </p>
+
+      <div class="mb-4">
+        <label for="modal-api-url" class="block text-xs font-medium text-slate-700 mb-1">Web App Executable URL:</label>
+        <input 
+          type="url" 
+          id="modal-api-url" 
+          placeholder="https://script.google.com/macros/s/.../exec" 
+          class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button onclick="toggleConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">
+          ยกเลิก
+        </button>
+        <button onclick="saveApiUrl()" class="px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-sm">
+          บันทึกและโหลดข้อมูล
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
+    <p>Powered by Google Forms &bull; Google Sheets &bull; GitHub Pages</p>
+  </footer>
+
+  <script>
+    // คุณสามารถนำ Web App URL มาใส่ตรงนี้ได้โดยตรง หรือกรอกผ่านปุ่ม "ตั้งค่า URL" บนหน้าเว็บ
+    const DEFAULT_API_URL = "";
+
+    let rawData = [];
+
+    function getApiUrl() {
+      return localStorage.getItem("gas_api_url") || DEFAULT_API_URL;
+    }
+
+    function toggleConfigModal() {
+      const modal = document.getElementById("config-modal");
+      const input = document.getElementById("modal-api-url");
+      input.value = getApiUrl();
+      modal.classList.toggle("hidden");
+    }
+
+    function saveApiUrl() {
+      const input = document.getElementById("modal-api-url");
+      const url = input.value.trim();
+      if (url) {
+        localStorage.setItem("gas_api_url", url);
+      } else {
+        localStorage.removeItem("gas_api_url");
+      }
+      toggleConfigModal();
+      fetchData();
+    }
+
+    async function fetchData() {
+      const url = getApiUrl();
+      const noticeBanner = document.getElementById("notice-banner");
+      const loadingState = document.getElementById("loading-state");
+      const cardsContainer = document.getElementById("cards-container");
+      const emptyState = document.getElementById("empty-state");
+      const errorBox = document.getElementById("error-box");
+      const refreshIcon = document.getElementById("refresh-icon");
+
+      if (!url) {
+        noticeBanner.classList.remove("hidden");
+        loadingState.classList.add("hidden");
+        cardsContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        noticeBanner.classList.add("hidden");
+      }
+
+      // Start loading animation
+      refreshIcon.classList.add("animate-spin");
+      errorBox.classList.add("hidden");
+      loadingState.classList.remove("hidden");
+      cardsContainer.classList.add("hidden");
+      emptyState.classList.add("hidden");
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+
+        if (result.status === "success" && Array.isArray(result.data)) {
+          rawData = result.data;
+          document.getElementById("last-updated").textContent = new Date().toLocaleTimeString('th-TH');
+          renderCards(rawData);
+        } else {
+          throw new Error(result.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        document.getElementById("error-message").textContent = err.message + " (กรุณาตรวจสอบว่าตั้งค่าสิทธิ์ Apps Script เป็น 'Anyone' หรือยัง)";
+        errorBox.classList.remove("hidden");
+      } finally {
+        loadingState.classList.add("hidden");
+        refreshIcon.classList.remove("animate-spin");
+      }
+    }
+
+    function renderCards(data) {
+      const cardsContainer = document.getElementById("cards-container");
+      const emptyState = document.getElementById("empty-state");
+      const totalCount = document.getElementById("total-count");
+
+      cardsContainer.innerHTML = "";
+      totalCount.textContent = data.length;
+
+      if (!data || data.length === 0) {
+        cardsContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      cardsContainer.classList.remove("hidden");
+
+      // เรียงจากข้อมูลใหม่สุดไปเก่าสุด
+      const reversedData = [...data].reverse();
+
+      reversedData.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+
+        const entries = Object.entries(item);
+        let fieldsHtml = entries.map(([key, value]) => {
+          const isTimestamp = key.toLowerCase().includes("timestamp") || key.toLowerCase().includes("ประทับเวลา");
+          return `
+            <div class="border-b border-slate-100 last:border-0 pb-2.5 mb-2.5 last:pb-0 last:mb-0">
+              <span class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block mb-0.5">${key}</span>
+              <p class="text-sm font-medium ${isTimestamp ? 'text-indigo-600 text-xs' : 'text-slate-800'} break-words whitespace-pre-wrap">${value || '-'}</p>
+            </div>
+          `;
+        }).join("");
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md">#${data.length - index}</span>
+            </div>
+            ${fieldsHtml}
+          </div>
+        `;
+
+        cardsContainer.appendChild(card);
+      });
+    }
+
+    function handleSearch() {
+      const query = document.getElementById("search-input").value.trim().toLowerCase();
+      if (!query) {
+        renderCards(rawData);
+        return;
+      }
+
+      const filtered = rawData.filter(item => {
+        return Object.values(item).some(val => 
+          String(val).toLowerCase().includes(query)
+        );
+      });
+
+      renderCards(filtered);
+    }
+
+    // เรียกดึงข้อมูลทันทีเมื่อเปิดหน้า
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchData();
+    });
+  </script>
+</body>
+</html>
