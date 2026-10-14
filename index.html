@@ -26,7 +26,7 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col">
 
-  <!-- Three.js celebrate background -->
+  <!-- Three.js background: confetti + fireworks -->
   <canvas id="bg"></canvas>
 
   <div class="relative z-10 flex flex-col min-h-screen">
@@ -40,21 +40,16 @@
           </div>
           <span class="font-semibold text-sm sm:text-base">Form Celebration</span>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
-            <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
-          </button>
-          <button onclick="fetchData()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-indigo-950 bg-amber-400 hover:bg-amber-300 active:scale-95 rounded-lg shadow transition">
-            <i class="ph-bold ph-arrows-clockwise text-sm" id="refresh-icon"></i><span>รีเฟรช</span>
-          </button>
-        </div>
+        <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
+          <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
+        </button>
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full flex flex-col justify-center">
 
       <!-- Notice banner if not configured -->
-      <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm flex items-start justify-between gap-3">
+      <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm flex items-start justify-between gap-3 max-w-3xl mx-auto w-full">
         <div class="flex items-start gap-3">
           <i class="ph-fill ph-warning-circle text-amber-400 text-xl flex-shrink-0 mt-0.5"></i>
           <div>
@@ -72,14 +67,14 @@
       </section>
 
       <!-- Headline stats -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4 max-w-3xl mx-auto">
-        <div class="glass rounded-3xl p-7 text-center">
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4 max-w-3xl mx-auto w-full">
+        <button onclick="toggleConfigModal()" class="glass rounded-3xl p-7 text-center hover:bg-white/10 transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วม">
           <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
             <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
           </div>
-          <div id="stat-participants" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">0</div>
-          <div class="text-xs text-slate-400 mt-2">คน <span id="participant-key-note"></span></div>
-        </div>
+          <div id="stat-participants" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">-</div>
+          <div id="participants-note" class="text-xs text-slate-400 mt-2">คน</div>
+        </button>
         <div class="glass rounded-3xl p-7 text-center">
           <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
             <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit ทั้งหมด
@@ -88,13 +83,14 @@
           <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
         </div>
       </section>
-      <p class="text-center text-xs text-slate-400 mb-12">
-        อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
-        <span class="mx-1">•</span> รีเฟรชอัตโนมัติทุก 60 วินาที
+      <p class="text-center text-xs text-slate-400">
+        <span id="live-dot" class="inline-block w-2 h-2 rounded-full bg-slate-500 mr-1 align-middle"></span>
+        <span id="live-label">ยังไม่เชื่อมต่อ</span>
+        <span class="mx-1">•</span> อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
       </p>
 
       <!-- Error Box -->
-      <div id="error-box" class="hidden mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-sm">
+      <div id="error-box" class="hidden mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-sm max-w-3xl mx-auto w-full">
         <div class="flex items-start gap-3">
           <i class="ph-fill ph-x-circle text-rose-400 text-xl flex-shrink-0 mt-0.5"></i>
           <div>
@@ -103,33 +99,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Responses list -->
-      <section>
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-5">
-          <h2 class="text-lg font-semibold flex items-center gap-2"><i class="ph-bold ph-list-heart text-pink-400"></i>คำตอบล่าสุด</h2>
-          <div class="relative w-full sm:w-72">
-            <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="search-input" placeholder="ค้นหาข้อมูล..." oninput="renderCards()"
-              class="w-full pl-9 pr-4 py-2 text-xs bg-white/5 border border-white/10 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
-          </div>
-        </div>
-
-        <!-- Skeleton Loading -->
-        <div id="loading-state" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
-          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
-          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
-        </div>
-
-        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-
-        <div id="empty-state" class="hidden text-center py-14 glass rounded-2xl border-dashed">
-          <i class="ph-bold ph-tray text-3xl text-slate-400"></i>
-          <h3 class="text-base font-semibold mt-2">ยังไม่พบข้อมูล</h3>
-          <p class="text-xs text-slate-400 mt-1">ยังไม่มีคำตอบในแบบฟอร์ม หรือไม่ตรงกับคำค้นหาของคุณ</p>
-        </div>
-      </section>
     </main>
 
     <footer class="py-6 text-center text-xs text-slate-500">
@@ -148,23 +117,27 @@
         <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-200"><i class="ph-bold ph-x text-lg"></i></button>
       </div>
 
+      <label for="modal-participants" class="block text-xs font-medium text-slate-300 mb-1">ยอดผู้เข้าร่วมทั้งหมด (คน)</label>
+      <input type="number" min="0" step="1" id="modal-participants" placeholder="เช่น 120"
+        class="w-full mb-4 px-3 py-2 text-sm bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+
       <label for="modal-api-url" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL</label>
       <input type="url" id="modal-api-url" placeholder="https://script.google.com/macros/s/.../exec"
-        class="w-full mb-4 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        class="w-full mb-5 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
 
-      <label for="modal-participant-key" class="block text-xs font-medium text-slate-300 mb-1">คอลัมน์ที่ใช้นับ "ผู้เข้าร่วม" (ไม่นับซ้ำ)</label>
-      <select id="modal-participant-key"
-        class="w-full mb-1 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400"></select>
-      <p class="text-[11px] text-slate-400 mb-5">เช่น อีเมล หรือ ชื่อ — ถ้าคนเดิมส่งหลายครั้งจะนับเป็น 1 คน</p>
-
-      <div class="flex justify-end gap-2">
-        <button onclick="toggleConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/10 rounded-lg transition">ยกเลิก</button>
-        <button onclick="saveConfig()" class="px-4 py-2 text-xs font-semibold text-indigo-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition">บันทึก</button>
+      <div class="flex justify-between items-center gap-2">
+        <button onclick="testFireworks()" class="px-3 py-2 text-xs font-medium text-amber-300 hover:bg-white/10 rounded-lg transition flex items-center gap-1">
+          <i class="ph-bold ph-sparkle"></i>ทดสอบพลุ
+        </button>
+        <div class="flex gap-2">
+          <button onclick="toggleConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/10 rounded-lg transition">ยกเลิก</button>
+          <button onclick="saveConfig()" class="px-4 py-2 text-xs font-semibold text-indigo-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition">บันทึก</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Three.js: simple confetti celebrate effect -->
+  <!-- Three.js: simple confetti + fireworks -->
   <script type="module">
     import * as THREE from 'three';
 
@@ -177,34 +150,12 @@
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
     camera.position.z = 20;
 
-    const COUNT = reduceMotion ? 60 : 160;
+    const rand = (a, b) => a + Math.random() * (b - a);
     const palette = [0xfbbf24, 0xf472b6, 0x38bdf8, 0xa78bfa, 0x34d399, 0xffffff].map(c => new THREE.Color(c));
-    const mesh = new THREE.InstancedMesh(
-      new THREE.PlaneGeometry(0.22, 0.38),
-      new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.8 }),
-      COUNT
-    );
-    scene.add(mesh);
 
     // Visible half-extents at z=0
-    let halfH = Math.tan(THREE.MathUtils.degToRad(30)) * camera.position.z;
+    const halfH = Math.tan(THREE.MathUtils.degToRad(30)) * camera.position.z;
     let halfW = halfH;
-
-    const rand = (a, b) => a + Math.random() * (b - a);
-    const particles = Array.from({ length: COUNT }, (_, i) => {
-      mesh.setColorAt(i, palette[i % palette.length]);
-      return {
-        x: 0, y: 0, z: rand(-6, 4),
-        vx: 0, vy: 0,
-        drift: rand(0.012, 0.035),          // ความเร็วตกปกติ
-        sway: rand(0, Math.PI * 2),
-        rx: rand(0, 6), ry: rand(0, 6),
-        rs: rand(0.01, 0.04),
-      };
-    });
-    particles.forEach(p => { p.x = rand(-halfW, halfW); p.y = rand(-halfH, halfH); p.vy = -p.drift; });
-
-    const dummy = new THREE.Object3D();
 
     function resize() {
       const w = window.innerWidth, h = window.innerHeight;
@@ -215,6 +166,27 @@
     }
     window.addEventListener('resize', resize);
     resize();
+
+    // ---------- Confetti (โปรยเบาๆ ตลอดเวลา) ----------
+    const COUNT = reduceMotion ? 60 : 160;
+    const confetti = new THREE.InstancedMesh(
+      new THREE.PlaneGeometry(0.22, 0.38),
+      new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.8 }),
+      COUNT
+    );
+    scene.add(confetti);
+
+    const particles = Array.from({ length: COUNT }, (_, i) => {
+      confetti.setColorAt(i, palette[i % palette.length]);
+      const drift = rand(0.012, 0.035);         // ความเร็วตกปกติ
+      return {
+        x: rand(-halfW, halfW), y: rand(-halfH, halfH), z: rand(-6, 4),
+        vx: 0, vy: -drift, drift,
+        sway: rand(0, Math.PI * 2),
+        rx: rand(0, 6), ry: rand(0, 6), rs: rand(0.01, 0.04),
+      };
+    });
+    const dummy = new THREE.Object3D();
 
     // ยิงคอนเฟตตีขึ้นจากด้านล่าง แล้วค่อยๆ กลับมาโปรยลงตามปกติ
     window.celebrate = function () {
@@ -227,9 +199,7 @@
       });
     };
 
-    function tick(t) {
-      requestAnimationFrame(tick);
-      const time = t * 0.001;
+    function updateConfetti(time) {
       particles.forEach((p, i) => {
         // ค่อยๆ ปรับความเร็วกลับสู่การโปรยลงแบบนุ่มนวล
         p.vy += (-p.drift - p.vy) * 0.025;
@@ -245,9 +215,117 @@
         dummy.position.set(p.x, p.y, p.z);
         dummy.rotation.set(p.rx, p.ry, 0);
         dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
+        confetti.setMatrixAt(i, dummy.matrix);
       });
-      mesh.instanceMatrix.needsUpdate = true;
+      confetti.instanceMatrix.needsUpdate = true;
+    }
+
+    // ---------- Fireworks (พลุ) ----------
+    // ใช้ pool ของจุดแสงชุดเดียว: จรวดพุ่งขึ้น -> ระเบิดเป็นประกายแล้วจางหาย
+    const MAX = 5000;
+    const fwPos = new Float32Array(MAX * 3).fill(9999);
+    const fwCol = new Float32Array(MAX * 3);
+    const fw = Array.from({ length: MAX }, () => ({ alive: false }));
+    let cursor = 0;
+
+    const dotTex = (() => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.3, 'rgba(255,255,255,0.8)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(c);
+    })();
+
+    const fwGeo = new THREE.BufferGeometry();
+    fwGeo.setAttribute('position', new THREE.BufferAttribute(fwPos, 3));
+    fwGeo.setAttribute('color', new THREE.BufferAttribute(fwCol, 3));
+    const fwPoints = new THREE.Points(fwGeo, new THREE.PointsMaterial({
+      size: 0.45, map: dotTex, vertexColors: true, transparent: true,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    }));
+    fwPoints.frustumCulled = false;
+    scene.add(fwPoints);
+
+    function spawn(o) {
+      const p = fw[cursor];
+      Object.assign(p, { alive: true, gravity: -0.004, drag: 0.985 }, o);
+      p.maxLife = p.life;
+      cursor = (cursor + 1) % MAX;
+    }
+
+    function launchRocket() {
+      const color = palette[Math.floor(Math.random() * (palette.length - 1))];
+      spawn({
+        kind: 'rocket', color,
+        x: rand(-halfW * 0.7, halfW * 0.7), y: -halfH - 1, z: rand(-3, 2),
+        vx: rand(-0.03, 0.03), vy: rand(0.38, 0.48), vz: 0,
+        life: 999, gravity: -0.006, drag: 1,
+      });
+    }
+
+    function explode(r) {
+      const n = 140;
+      const second = Math.random() < 0.4 ? palette[Math.floor(Math.random() * palette.length)] : r.color;
+      for (let i = 0; i < n; i++) {
+        // ทิศทางสุ่มบนทรงกลม
+        const u = rand(-1, 1), th = rand(0, Math.PI * 2), s = Math.sqrt(1 - u * u);
+        const speed = rand(0.16, 0.24);
+        spawn({
+          kind: 'spark', color: i % 2 ? r.color : second,
+          x: r.x, y: r.y, z: r.z,
+          vx: s * Math.cos(th) * speed, vy: s * Math.sin(th) * speed, vz: u * speed,
+          life: rand(55, 85) | 0,
+        });
+      }
+    }
+
+    function updateFireworks() {
+      for (let i = 0; i < MAX; i++) {
+        const p = fw[i];
+        if (!p.alive) continue;
+
+        p.vx *= p.drag; p.vy = p.vy * p.drag + p.gravity; p.vz *= p.drag;
+        p.x += p.vx; p.y += p.vy; p.z += p.vz;
+        p.life--;
+
+        let fade;
+        if (p.kind === 'rocket') {
+          fade = 1;
+          // หางประกายเล็กๆ ระหว่างพุ่ง
+          spawn({ kind: 'trail', color: p.color, x: p.x, y: p.y, z: p.z,
+                  vx: rand(-0.01, 0.01), vy: -0.02, vz: 0, life: 18 });
+          if (p.vy <= 0.05) { p.alive = false; explode(p); }
+        } else {
+          fade = Math.max(p.life / p.maxLife, 0);
+          if (p.life <= 0) p.alive = false;
+        }
+
+        if (p.alive) {
+          fwPos[i * 3] = p.x; fwPos[i * 3 + 1] = p.y; fwPos[i * 3 + 2] = p.z;
+          fwCol[i * 3] = p.color.r * fade; fwCol[i * 3 + 1] = p.color.g * fade; fwCol[i * 3 + 2] = p.color.b * fade;
+        } else {
+          fwPos[i * 3 + 1] = 9999;
+          fwCol[i * 3] = fwCol[i * 3 + 1] = fwCol[i * 3 + 2] = 0;
+        }
+      }
+      fwGeo.attributes.position.needsUpdate = true;
+      fwGeo.attributes.color.needsUpdate = true;
+    }
+
+    window.fireworks = function (shots = 6) {
+      if (reduceMotion) return;
+      for (let i = 0; i < shots; i++) setTimeout(launchRocket, i * 350 + rand(0, 150));
+    };
+
+    function tick(t) {
+      requestAnimationFrame(tick);
+      updateConfetti(t * 0.001);
+      updateFireworks();
       renderer.render(scene, camera);
     }
     requestAnimationFrame(tick);
@@ -260,41 +338,29 @@
   <script>
     // คุณสามารถนำ Web App URL มาใส่ตรงนี้ได้โดยตรง หรือกรอกผ่านปุ่ม "ตั้งค่า" บนหน้าเว็บ
     const DEFAULT_API_URL = "";
-    const AUTO_REFRESH_MS = 60000;
+    // ยอดผู้เข้าร่วมเริ่มต้น (ใส่ตัวเลขที่นี่เพื่อให้ผู้ชมทุกเครื่องเห็นค่าเดียวกัน) — null = ยังไม่กำหนด
+    const DEFAULT_PARTICIPANTS = null;
 
-    let rawData = [];
-    let headers = [];
-    let lastSubmissionCount = null;
+    const REFRESH_MS = 1000;            // ดึงข้อมูลทุก 1 วินาที (นับจากคำขอก่อนหน้าเสร็จ)
+    const FIREWORK_EVERY_N = 5;         // ตรวจยอด submit ทุกๆ 5 รอบการรีเฟรช
+
+    let refreshCount = 0;
+    let checkpointSubmissions = null;   // ยอด submit ณ จุดตรวจล่าสุด
+    let firstLoad = true;
 
     const getApiUrl = () => localStorage.getItem("gas_api_url") || DEFAULT_API_URL;
 
-    const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, c =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
-    // เลือกคอลัมน์สำหรับนับผู้เข้าร่วมแบบไม่ซ้ำ: ค่าที่ผู้ใช้ตั้งไว้ > อีเมล > ชื่อ
-    function getParticipantKey() {
-      const saved = localStorage.getItem("participant_key");
-      if (saved === "__none__") return null;
-      if (saved && headers.includes(saved)) return saved;
-      return headers.find(h => /e-?mail|อีเมล/i.test(h))
-          || headers.find(h => /name|ชื่อ/i.test(h))
-          || null;
-    }
-
-    function computeStats(data) {
-      const key = getParticipantKey();
-      const submissions = data.length;
-      if (!key) return { submissions, participants: submissions, key: null };
-      const unique = new Set(
-        data.map(r => String(r[key] ?? "").trim().toLowerCase()).filter(Boolean)
-      );
-      return { submissions, participants: unique.size, key };
+    function getParticipants() {
+      const saved = localStorage.getItem("participants_total");
+      if (saved !== null && saved !== "") return Number(saved);
+      return DEFAULT_PARTICIPANTS;
     }
 
     function animateNumber(el, to) {
       const from = Number(el.dataset.value || 0);
+      if (from === to && el.textContent !== "-") return;
       el.dataset.value = to;
-      const start = performance.now(), dur = 1200;
+      const start = performance.now(), dur = 800;
       function step(now) {
         const p = Math.min((now - start) / dur, 1);
         const eased = 1 - Math.pow(1 - p, 3);
@@ -304,9 +370,18 @@
       requestAnimationFrame(step);
     }
 
-    function triggerCelebrate() {
-      if (window.celebrate) window.celebrate();
-      else window.__pendingCelebrate = true;
+    function renderParticipants() {
+      const el = document.getElementById("stat-participants");
+      const note = document.getElementById("participants-note");
+      const value = getParticipants();
+      if (value === null || Number.isNaN(value)) {
+        el.textContent = "-";
+        el.dataset.value = 0;
+        note.textContent = "กดเพื่อกรอกยอดผู้เข้าร่วม";
+      } else {
+        animateNumber(el, value);
+        note.textContent = "คน";
+      }
     }
 
     function showToast(msg) {
@@ -317,32 +392,42 @@
       showToast._timer = setTimeout(() => t.classList.add("opacity-0", "translate-y-4"), 3500);
     }
 
-    function updateStats() {
-      const { submissions, participants, key } = computeStats(rawData);
-      animateNumber(document.getElementById("stat-submissions"), submissions);
-      animateNumber(document.getElementById("stat-participants"), participants);
-      document.getElementById("participant-key-note").textContent =
-        key ? `(นับไม่ซ้ำจาก "${key}")` : "(ไม่พบคอลัมน์ระบุตัวตน — นับตามจำนวน submit)";
+    function setLive(ok, label) {
+      document.getElementById("live-dot").className =
+        "inline-block w-2 h-2 rounded-full mr-1 align-middle " + (ok ? "bg-emerald-400 animate-pulse" : "bg-slate-500");
+      document.getElementById("live-label").textContent = label;
+    }
 
-      if (lastSubmissionCount === null) {
-        if (submissions > 0) triggerCelebrate();          // ฉลองครั้งแรกที่เปิดหน้า
-      } else if (submissions > lastSubmissionCount) {
-        triggerCelebrate();
-        showToast(`🎉 มีผู้ตอบใหม่ +${submissions - lastSubmissionCount}`);
+    function onSubmissions(submissions) {
+      animateNumber(document.getElementById("stat-submissions"), submissions);
+
+      if (firstLoad) {
+        firstLoad = false;
+        checkpointSubmissions = submissions;
+        if (submissions > 0) {
+          if (window.celebrate) window.celebrate();
+          else window.__pendingCelebrate = true;
+        }
+        return;
       }
-      lastSubmissionCount = submissions;
+
+      // ทุกๆ 5 รอบ: ถ้ายอด submit เพิ่มขึ้นจากจุดตรวจก่อนหน้า -> ยิงพลุ
+      refreshCount++;
+      if (refreshCount % FIREWORK_EVERY_N === 0) {
+        const diff = submissions - checkpointSubmissions;
+        if (diff > 0) {
+          window.fireworks?.(Math.min(4 + diff, 10));
+          showToast(`🎆 มีผู้ตอบใหม่ +${diff}`);
+        }
+        checkpointSubmissions = submissions;
+      }
     }
 
     function toggleConfigModal() {
       const modal = document.getElementById("config-modal");
       document.getElementById("modal-api-url").value = getApiUrl();
-
-      const select = document.getElementById("modal-participant-key");
-      const current = getParticipantKey();
-      select.innerHTML = `<option value="__none__">— ไม่ระบุ (นับตามจำนวน submit) —</option>` +
-        headers.map(h => `<option value="${escapeHtml(h)}" ${h === current ? "selected" : ""}>${escapeHtml(h)}</option>`).join("");
-      if (!current) select.value = "__none__";
-
+      const p = getParticipants();
+      document.getElementById("modal-participants").value = p === null ? "" : p;
       modal.classList.toggle("hidden");
     }
 
@@ -351,96 +436,59 @@
       if (url) localStorage.setItem("gas_api_url", url);
       else localStorage.removeItem("gas_api_url");
 
-      const key = document.getElementById("modal-participant-key").value;
-      if (key) localStorage.setItem("participant_key", key);
+      const p = document.getElementById("modal-participants").value.trim();
+      if (p !== "" && Number(p) >= 0) localStorage.setItem("participants_total", String(Math.floor(Number(p))));
+      else localStorage.removeItem("participants_total");
 
       toggleConfigModal();
-      fetchData();
+      renderParticipants();
     }
 
-    async function fetchData(silent = false) {
+    function testFireworks() {
+      toggleConfigModal();
+      window.fireworks?.(6);
+    }
+
+    async function fetchData() {
       const url = getApiUrl();
-      const noticeBanner = document.getElementById("notice-banner");
-      const loadingState = document.getElementById("loading-state");
       const errorBox = document.getElementById("error-box");
-      const refreshIcon = document.getElementById("refresh-icon");
-
-      if (!url) {
-        noticeBanner.classList.remove("hidden");
-        renderCards();
-        return;
-      }
-      noticeBanner.classList.add("hidden");
-
-      refreshIcon.classList.add("animate-spin");
-      errorBox.classList.add("hidden");
-      if (!silent && rawData.length === 0) loadingState.classList.remove("hidden");
+      document.getElementById("notice-banner").classList.toggle("hidden", !!url);
+      if (!url) { setLive(false, "ยังไม่เชื่อมต่อ"); return; }
 
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
+        if (result.status !== "success") throw new Error(result.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
 
-        if (result.status === "success" && Array.isArray(result.data)) {
-          rawData = result.data;
-          headers = rawData.length ? Object.keys(rawData[0]) : [];
-          document.getElementById("last-updated").textContent = new Date().toLocaleTimeString("th-TH");
-          updateStats();
-          renderCards();
-        } else {
-          throw new Error(result.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
-        }
+        // รองรับทั้ง Apps Script แบบส่งเฉพาะยอด ({ total }) และแบบส่งข้อมูลทั้งหมด ({ data: [...] })
+        const submissions = typeof result.total === "number"
+          ? result.total
+          : Array.isArray(result.data) ? result.data.length : null;
+        if (submissions === null) throw new Error("ไม่พบ total หรือ data ในข้อมูลตอบกลับ");
+
+        onSubmissions(submissions);
+        errorBox.classList.add("hidden");
+        setLive(true, "LIVE");
+        document.getElementById("last-updated").textContent = new Date().toLocaleTimeString("th-TH");
       } catch (err) {
         console.error("Fetch error:", err);
         document.getElementById("error-message").textContent =
           err.message + " (กรุณาตรวจสอบว่าตั้งค่าสิทธิ์ Apps Script เป็น 'Anyone' หรือยัง)";
         errorBox.classList.remove("hidden");
-      } finally {
-        loadingState.classList.add("hidden");
-        refreshIcon.classList.remove("animate-spin");
+        setLive(false, "ขาดการเชื่อมต่อ");
       }
     }
 
-    function renderCards() {
-      const container = document.getElementById("cards-container");
-      const emptyState = document.getElementById("empty-state");
-      const query = document.getElementById("search-input").value.trim().toLowerCase();
-
-      const data = query
-        ? rawData.filter(item => Object.values(item).some(v => String(v).toLowerCase().includes(query)))
-        : rawData;
-
-      container.innerHTML = "";
-      if (data.length === 0) {
-        emptyState.classList.remove("hidden");
-        return;
-      }
-      emptyState.classList.add("hidden");
-
-      // เรียงจากข้อมูลใหม่สุดไปเก่าสุด
-      [...data].reverse().forEach((item) => {
-        const number = rawData.indexOf(item) + 1;
-        const fieldsHtml = Object.entries(item).map(([key, value]) => {
-          const isTimestamp = /timestamp|ประทับเวลา/i.test(key);
-          return `
-            <div class="border-b border-white/5 last:border-0 pb-2.5 mb-2.5 last:pb-0 last:mb-0">
-              <span class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block mb-0.5">${escapeHtml(key)}</span>
-              <p class="text-sm ${isTimestamp ? "text-amber-300 text-xs" : "text-slate-100"} break-words whitespace-pre-wrap">${escapeHtml(value) || "-"}</p>
-            </div>`;
-        }).join("");
-
-        const card = document.createElement("div");
-        card.className = "glass p-5 rounded-2xl hover:bg-white/10 transition";
-        card.innerHTML = `
-          <span class="inline-block text-[10px] font-bold px-2 py-0.5 bg-amber-400/20 text-amber-300 rounded-md mb-3">#${number}</span>
-          ${fieldsHtml}`;
-        container.appendChild(card);
-      });
+    // วนดึงข้อมูล: รอคำขอก่อนหน้าเสร็จก่อนเสมอ เพื่อไม่ให้คำขอซ้อนกัน
+    async function pollLoop() {
+      if (!document.hidden) await fetchData();
+      setTimeout(pollLoop, REFRESH_MS);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      fetchData();
-      setInterval(() => { if (!document.hidden) fetchData(true); }, AUTO_REFRESH_MS);
+      renderParticipants();
+      pollLoop();
     });
   </script>
 </body>
