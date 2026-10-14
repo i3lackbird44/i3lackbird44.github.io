@@ -3,249 +3,397 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google Form Dashboard | GitHub Pages</title>
+  <title>ขอบคุณผู้ร่วมตอบแบบสอบถาม 🎉</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Phosphor Icons for modern icons -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Three.js via Import Map -->
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
     body {
       font-family: 'Prompt', sans-serif;
+      background: radial-gradient(ellipse at top, #312e81 0%, #1e1b4b 45%, #0f0a2e 100%);
+      background-attachment: fixed;
     }
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+    .num-glow { text-shadow: 0 0 30px rgba(251,191,36,0.35); }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="text-slate-100 min-h-screen flex flex-col">
 
-  <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-100">
-          <i class="ph-bold ph-chart-bar"></i>
+  <!-- Three.js celebrate background -->
+  <canvas id="bg"></canvas>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-30 glass border-x-0 border-t-0">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center text-lg shadow-lg">
+            <i class="ph-bold ph-confetti"></i>
+          </div>
+          <span class="font-semibold text-sm sm:text-base">Form Celebration</span>
         </div>
-        <div>
-          <h1 class="text-xl font-bold text-slate-900 leading-tight">Google Form Responses</h1>
-          <p class="text-xs text-slate-500">เชื่อมต่อและแสดงผลข้อมูลตอบกลับแบบ Real-time</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button id="config-btn" onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="ตั้งค่า Web App API">
-          <i class="ph-bold ph-gear text-sm"></i>
-          <span>ตั้งค่า URL</span>
-        </button>
-        <button id="refresh-btn" onclick="fetchData()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-lg shadow-sm transition">
-          <i class="ph-bold ph-arrows-clockwise text-sm" id="refresh-icon"></i>
-          <span>รีเฟรช</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    
-    <!-- Status / URL Notice banner if not configured -->
-    <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-start justify-between gap-3 shadow-sm">
-      <div class="flex items-start gap-3">
-        <i class="ph-fill ph-warning-circle text-amber-600 text-xl flex-shrink-0 mt-0.5"></i>
-        <div>
-          <p class="font-semibold">ยังไม่ได้ระบุ Google Apps Script Web App URL</p>
-          <p class="text-xs text-amber-700 mt-1">คลิกที่ปุ่ม <strong>"ตั้งค่า URL"</strong> ด้านบน หรือใส่ URL ในตัวแปร <code>DEFAULT_API_URL</code> ในโค้ด</p>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
+            <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
+          </button>
+          <button onclick="fetchData()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-indigo-950 bg-amber-400 hover:bg-amber-300 active:scale-95 rounded-lg shadow transition">
+            <i class="ph-bold ph-arrows-clockwise text-sm" id="refresh-icon"></i><span>รีเฟรช</span>
+          </button>
         </div>
       </div>
-      <button onclick="toggleConfigModal()" class="text-xs font-semibold px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition flex-shrink-0">
-        ใส่ URL เดี๋ยวนี้
-      </button>
-    </div>
+    </header>
 
-    <!-- Stats & Search Controls -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-4 w-full md:w-auto">
-        <div class="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-xl">
-          <span class="text-xs text-indigo-600 font-medium">รายการทั้งหมด:</span>
-          <span id="total-count" class="text-lg font-bold text-indigo-700 ml-1">0</span>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+
+      <!-- Notice banner if not configured -->
+      <div id="notice-banner" class="hidden mb-6 p-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm flex items-start justify-between gap-3">
+        <div class="flex items-start gap-3">
+          <i class="ph-fill ph-warning-circle text-amber-400 text-xl flex-shrink-0 mt-0.5"></i>
+          <div>
+            <p class="font-semibold">ยังไม่ได้ระบุ Google Apps Script Web App URL</p>
+            <p class="text-xs text-amber-200/80 mt-1">กดปุ่ม <strong>"ตั้งค่า"</strong> ด้านบน หรือใส่ URL ในตัวแปร <code>DEFAULT_API_URL</code> ในโค้ด</p>
+          </div>
         </div>
-        <div class="text-xs text-slate-500">
-          อัปเดตล่าสุด: <span id="last-updated" class="font-medium text-slate-700">-</span>
+        <button onclick="toggleConfigModal()" class="text-xs font-semibold px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-indigo-950 rounded-lg transition flex-shrink-0">ใส่ URL</button>
+      </div>
+
+      <!-- Hero -->
+      <section class="text-center mb-10">
+        <p class="text-amber-300 text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
+        <h1 class="text-3xl sm:text-4xl font-bold">ยอดผู้ร่วมกิจกรรมของเรา</h1>
+      </section>
+
+      <!-- Headline stats -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4 max-w-3xl mx-auto">
+        <div class="glass rounded-3xl p-7 text-center">
+          <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
+            <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
+          </div>
+          <div id="stat-participants" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">0</div>
+          <div class="text-xs text-slate-400 mt-2">คน <span id="participant-key-note"></span></div>
         </div>
-      </div>
-
-      <!-- Search Box -->
-      <div class="relative w-full md:w-72">
-        <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="ค้นหาข้อมูล..." 
-          oninput="handleSearch()"
-          class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
-        />
-      </div>
-    </div>
-
-    <!-- Error Box -->
-    <div id="error-box" class="hidden mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
-      <div class="flex items-start gap-3">
-        <i class="ph-fill ph-x-circle text-rose-600 text-xl flex-shrink-0 mt-0.5"></i>
-        <div>
-          <p class="font-semibold">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
-          <p id="error-message" class="text-xs text-rose-700 mt-1"></p>
+        <div class="glass rounded-3xl p-7 text-center">
+          <div class="flex items-center justify-center gap-2 text-slate-300 text-sm mb-2">
+            <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit ทั้งหมด
+          </div>
+          <div id="stat-submissions" class="num-glow text-6xl sm:text-7xl font-bold text-amber-300" data-value="0">0</div>
+          <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
         </div>
-      </div>
-    </div>
-
-    <!-- Skeleton Loading -->
-    <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
-        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
-        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-      </div>
-      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
-        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
-        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-      </div>
-      <div class="bg-white p-5 rounded-2xl border border-slate-200 animate-pulse space-y-3">
-        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-        <div class="h-6 bg-slate-200 rounded w-3/4"></div>
-        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-      </div>
-    </div>
-
-    <!-- Cards Container -->
-    <div id="cards-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Data cards will be dynamically injected here -->
-    </div>
-
-    <!-- Empty State -->
-    <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
-      <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl mb-3">
-        <i class="ph-bold ph-tray"></i>
-      </div>
-      <h3 class="text-base font-semibold text-slate-700">ยังไม่พบข้อมูล</h3>
-      <p class="text-xs text-slate-500 mt-1">ยังไม่มีคำตอบในแบบฟอร์ม หรือไม่ตรงกับคำค้นหาของคุณ</p>
-    </div>
-
-  </main>
-
-  <!-- Modal Configuration -->
-  <div id="config-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-          <i class="ph-bold ph-link text-indigo-600"></i>
-          ตั้งค่า Google Apps Script URL
-        </h3>
-        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-600">
-          <i class="ph-bold ph-x text-lg"></i>
-        </button>
-      </div>
-      
-      <p class="text-xs text-slate-500 mb-4 leading-relaxed">
-        ระบุ Web App URL ที่ได้จากการ Deploy ใน Google Apps Script (ขึ้นต้นด้วย <code>https://script.google.com/macros/s/.../exec</code>)
+      </section>
+      <p class="text-center text-xs text-slate-400 mb-12">
+        อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
+        <span class="mx-1">•</span> รีเฟรชอัตโนมัติทุก 60 วินาที
       </p>
 
-      <div class="mb-4">
-        <label for="modal-api-url" class="block text-xs font-medium text-slate-700 mb-1">Web App Executable URL:</label>
-        <input 
-          type="url" 
-          id="modal-api-url" 
-          placeholder="https://script.google.com/macros/s/.../exec" 
-          class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+      <!-- Error Box -->
+      <div id="error-box" class="hidden mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-sm">
+        <div class="flex items-start gap-3">
+          <i class="ph-fill ph-x-circle text-rose-400 text-xl flex-shrink-0 mt-0.5"></i>
+          <div>
+            <p class="font-semibold">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
+            <p id="error-message" class="text-xs text-rose-200/80 mt-1"></p>
+          </div>
+        </div>
       </div>
 
+      <!-- Responses list -->
+      <section>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-5">
+          <h2 class="text-lg font-semibold flex items-center gap-2"><i class="ph-bold ph-list-heart text-pink-400"></i>คำตอบล่าสุด</h2>
+          <div class="relative w-full sm:w-72">
+            <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="search-input" placeholder="ค้นหาข้อมูล..." oninput="renderCards()"
+              class="w-full pl-9 pr-4 py-2 text-xs bg-white/5 border border-white/10 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+          </div>
+        </div>
+
+        <!-- Skeleton Loading -->
+        <div id="loading-state" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
+          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
+          <div class="glass p-5 rounded-2xl animate-pulse space-y-3"><div class="h-4 bg-white/10 rounded w-1/3"></div><div class="h-6 bg-white/10 rounded w-3/4"></div></div>
+        </div>
+
+        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+        <div id="empty-state" class="hidden text-center py-14 glass rounded-2xl border-dashed">
+          <i class="ph-bold ph-tray text-3xl text-slate-400"></i>
+          <h3 class="text-base font-semibold mt-2">ยังไม่พบข้อมูล</h3>
+          <p class="text-xs text-slate-400 mt-1">ยังไม่มีคำตอบในแบบฟอร์ม หรือไม่ตรงกับคำค้นหาของคุณ</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-6 text-center text-xs text-slate-500">
+      Powered by Google Forms &bull; Google Sheets &bull; Three.js &bull; GitHub Pages
+    </footer>
+  </div>
+
+  <!-- Toast: new submissions -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-amber-400 text-indigo-950 font-semibold text-sm shadow-2xl transition-all duration-500 opacity-0 translate-y-4 pointer-events-none"></div>
+
+  <!-- Modal Configuration -->
+  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-white/10">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-base font-bold flex items-center gap-2"><i class="ph-bold ph-gear text-amber-400"></i>ตั้งค่า</h3>
+        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-slate-200"><i class="ph-bold ph-x text-lg"></i></button>
+      </div>
+
+      <label for="modal-api-url" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL</label>
+      <input type="url" id="modal-api-url" placeholder="https://script.google.com/macros/s/.../exec"
+        class="w-full mb-4 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+
+      <label for="modal-participant-key" class="block text-xs font-medium text-slate-300 mb-1">คอลัมน์ที่ใช้นับ "ผู้เข้าร่วม" (ไม่นับซ้ำ)</label>
+      <select id="modal-participant-key"
+        class="w-full mb-1 px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400"></select>
+      <p class="text-[11px] text-slate-400 mb-5">เช่น อีเมล หรือ ชื่อ — ถ้าคนเดิมส่งหลายครั้งจะนับเป็น 1 คน</p>
+
       <div class="flex justify-end gap-2">
-        <button onclick="toggleConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">
-          ยกเลิก
-        </button>
-        <button onclick="saveApiUrl()" class="px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-sm">
-          บันทึกและโหลดข้อมูล
-        </button>
+        <button onclick="toggleConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/10 rounded-lg transition">ยกเลิก</button>
+        <button onclick="saveConfig()" class="px-4 py-2 text-xs font-semibold text-indigo-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition">บันทึก</button>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-    <p>Powered by Google Forms &bull; Google Sheets &bull; GitHub Pages</p>
-  </footer>
+  <!-- Three.js: simple confetti celebrate effect -->
+  <script type="module">
+    import * as THREE from 'three';
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canvas = document.getElementById('bg');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+    camera.position.z = 20;
+
+    const COUNT = reduceMotion ? 60 : 160;
+    const palette = [0xfbbf24, 0xf472b6, 0x38bdf8, 0xa78bfa, 0x34d399, 0xffffff].map(c => new THREE.Color(c));
+    const mesh = new THREE.InstancedMesh(
+      new THREE.PlaneGeometry(0.22, 0.38),
+      new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.8 }),
+      COUNT
+    );
+    scene.add(mesh);
+
+    // Visible half-extents at z=0
+    let halfH = Math.tan(THREE.MathUtils.degToRad(30)) * camera.position.z;
+    let halfW = halfH;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const particles = Array.from({ length: COUNT }, (_, i) => {
+      mesh.setColorAt(i, palette[i % palette.length]);
+      return {
+        x: 0, y: 0, z: rand(-6, 4),
+        vx: 0, vy: 0,
+        drift: rand(0.012, 0.035),          // ความเร็วตกปกติ
+        sway: rand(0, Math.PI * 2),
+        rx: rand(0, 6), ry: rand(0, 6),
+        rs: rand(0.01, 0.04),
+      };
+    });
+    particles.forEach(p => { p.x = rand(-halfW, halfW); p.y = rand(-halfH, halfH); p.vy = -p.drift; });
+
+    const dummy = new THREE.Object3D();
+
+    function resize() {
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      halfW = halfH * camera.aspect;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // ยิงคอนเฟตตีขึ้นจากด้านล่าง แล้วค่อยๆ กลับมาโปรยลงตามปกติ
+    window.celebrate = function () {
+      if (reduceMotion) return;
+      particles.forEach(p => {
+        p.x = rand(-halfW * 0.5, halfW * 0.5);
+        p.y = -halfH - rand(0, 2);
+        p.vx = rand(-0.25, 0.25);
+        p.vy = rand(0.35, 0.6);
+      });
+    };
+
+    function tick(t) {
+      requestAnimationFrame(tick);
+      const time = t * 0.001;
+      particles.forEach((p, i) => {
+        // ค่อยๆ ปรับความเร็วกลับสู่การโปรยลงแบบนุ่มนวล
+        p.vy += (-p.drift - p.vy) * 0.025;
+        p.vx *= 0.97;
+        p.x += p.vx + Math.sin(time + p.sway) * 0.008;
+        p.y += p.vy;
+        p.rx += p.rs; p.ry += p.rs * 0.7;
+
+        if (p.y < -halfH - 1) { p.y = halfH + 1; p.x = rand(-halfW, halfW); }
+        if (p.x > halfW + 1) p.x = -halfW - 1;
+        if (p.x < -halfW - 1) p.x = halfW + 1;
+
+        dummy.position.set(p.x, p.y, p.z);
+        dummy.rotation.set(p.rx, p.ry, 0);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(tick);
+
+    // ถ้าข้อมูลโหลดเสร็จก่อนฉากพร้อม ให้ยิงตามคำขอที่ค้างไว้
+    if (window.__pendingCelebrate) window.celebrate();
+  </script>
+
+  <!-- App logic -->
   <script>
-    // คุณสามารถนำ Web App URL มาใส่ตรงนี้ได้โดยตรง หรือกรอกผ่านปุ่ม "ตั้งค่า URL" บนหน้าเว็บ
+    // คุณสามารถนำ Web App URL มาใส่ตรงนี้ได้โดยตรง หรือกรอกผ่านปุ่ม "ตั้งค่า" บนหน้าเว็บ
     const DEFAULT_API_URL = "";
+    const AUTO_REFRESH_MS = 60000;
 
     let rawData = [];
+    let headers = [];
+    let lastSubmissionCount = null;
 
-    function getApiUrl() {
-      return localStorage.getItem("gas_api_url") || DEFAULT_API_URL;
+    const getApiUrl = () => localStorage.getItem("gas_api_url") || DEFAULT_API_URL;
+
+    const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    // เลือกคอลัมน์สำหรับนับผู้เข้าร่วมแบบไม่ซ้ำ: ค่าที่ผู้ใช้ตั้งไว้ > อีเมล > ชื่อ
+    function getParticipantKey() {
+      const saved = localStorage.getItem("participant_key");
+      if (saved === "__none__") return null;
+      if (saved && headers.includes(saved)) return saved;
+      return headers.find(h => /e-?mail|อีเมล/i.test(h))
+          || headers.find(h => /name|ชื่อ/i.test(h))
+          || null;
+    }
+
+    function computeStats(data) {
+      const key = getParticipantKey();
+      const submissions = data.length;
+      if (!key) return { submissions, participants: submissions, key: null };
+      const unique = new Set(
+        data.map(r => String(r[key] ?? "").trim().toLowerCase()).filter(Boolean)
+      );
+      return { submissions, participants: unique.size, key };
+    }
+
+    function animateNumber(el, to) {
+      const from = Number(el.dataset.value || 0);
+      el.dataset.value = to;
+      const start = performance.now(), dur = 1200;
+      function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(from + (to - from) * eased).toLocaleString("th-TH");
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function triggerCelebrate() {
+      if (window.celebrate) window.celebrate();
+      else window.__pendingCelebrate = true;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.remove("opacity-0", "translate-y-4");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => t.classList.add("opacity-0", "translate-y-4"), 3500);
+    }
+
+    function updateStats() {
+      const { submissions, participants, key } = computeStats(rawData);
+      animateNumber(document.getElementById("stat-submissions"), submissions);
+      animateNumber(document.getElementById("stat-participants"), participants);
+      document.getElementById("participant-key-note").textContent =
+        key ? `(นับไม่ซ้ำจาก "${key}")` : "(ไม่พบคอลัมน์ระบุตัวตน — นับตามจำนวน submit)";
+
+      if (lastSubmissionCount === null) {
+        if (submissions > 0) triggerCelebrate();          // ฉลองครั้งแรกที่เปิดหน้า
+      } else if (submissions > lastSubmissionCount) {
+        triggerCelebrate();
+        showToast(`🎉 มีผู้ตอบใหม่ +${submissions - lastSubmissionCount}`);
+      }
+      lastSubmissionCount = submissions;
     }
 
     function toggleConfigModal() {
       const modal = document.getElementById("config-modal");
-      const input = document.getElementById("modal-api-url");
-      input.value = getApiUrl();
+      document.getElementById("modal-api-url").value = getApiUrl();
+
+      const select = document.getElementById("modal-participant-key");
+      const current = getParticipantKey();
+      select.innerHTML = `<option value="__none__">— ไม่ระบุ (นับตามจำนวน submit) —</option>` +
+        headers.map(h => `<option value="${escapeHtml(h)}" ${h === current ? "selected" : ""}>${escapeHtml(h)}</option>`).join("");
+      if (!current) select.value = "__none__";
+
       modal.classList.toggle("hidden");
     }
 
-    function saveApiUrl() {
-      const input = document.getElementById("modal-api-url");
-      const url = input.value.trim();
-      if (url) {
-        localStorage.setItem("gas_api_url", url);
-      } else {
-        localStorage.removeItem("gas_api_url");
-      }
+    function saveConfig() {
+      const url = document.getElementById("modal-api-url").value.trim();
+      if (url) localStorage.setItem("gas_api_url", url);
+      else localStorage.removeItem("gas_api_url");
+
+      const key = document.getElementById("modal-participant-key").value;
+      if (key) localStorage.setItem("participant_key", key);
+
       toggleConfigModal();
       fetchData();
     }
 
-    async function fetchData() {
+    async function fetchData(silent = false) {
       const url = getApiUrl();
       const noticeBanner = document.getElementById("notice-banner");
       const loadingState = document.getElementById("loading-state");
-      const cardsContainer = document.getElementById("cards-container");
-      const emptyState = document.getElementById("empty-state");
       const errorBox = document.getElementById("error-box");
       const refreshIcon = document.getElementById("refresh-icon");
 
       if (!url) {
         noticeBanner.classList.remove("hidden");
-        loadingState.classList.add("hidden");
-        cardsContainer.classList.add("hidden");
-        emptyState.classList.remove("hidden");
+        renderCards();
         return;
-      } else {
-        noticeBanner.classList.add("hidden");
       }
+      noticeBanner.classList.add("hidden");
 
-      // Start loading animation
       refreshIcon.classList.add("animate-spin");
       errorBox.classList.add("hidden");
-      loadingState.classList.remove("hidden");
-      cardsContainer.classList.add("hidden");
-      emptyState.classList.add("hidden");
+      if (!silent && rawData.length === 0) loadingState.classList.remove("hidden");
 
       try {
         const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
 
         if (result.status === "success" && Array.isArray(result.data)) {
           rawData = result.data;
-          document.getElementById("last-updated").textContent = new Date().toLocaleTimeString('th-TH');
-          renderCards(rawData);
+          headers = rawData.length ? Object.keys(rawData[0]) : [];
+          document.getElementById("last-updated").textContent = new Date().toLocaleTimeString("th-TH");
+          updateStats();
+          renderCards();
         } else {
           throw new Error(result.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        document.getElementById("error-message").textContent = err.message + " (กรุณาตรวจสอบว่าตั้งค่าสิทธิ์ Apps Script เป็น 'Anyone' หรือยัง)";
+        document.getElementById("error-message").textContent =
+          err.message + " (กรุณาตรวจสอบว่าตั้งค่าสิทธิ์ Apps Script เป็น 'Anyone' หรือยัง)";
         errorBox.classList.remove("hidden");
       } finally {
         loadingState.classList.add("hidden");
@@ -253,73 +401,46 @@
       }
     }
 
-    function renderCards(data) {
-      const cardsContainer = document.getElementById("cards-container");
+    function renderCards() {
+      const container = document.getElementById("cards-container");
       const emptyState = document.getElementById("empty-state");
-      const totalCount = document.getElementById("total-count");
+      const query = document.getElementById("search-input").value.trim().toLowerCase();
 
-      cardsContainer.innerHTML = "";
-      totalCount.textContent = data.length;
+      const data = query
+        ? rawData.filter(item => Object.values(item).some(v => String(v).toLowerCase().includes(query)))
+        : rawData;
 
-      if (!data || data.length === 0) {
-        cardsContainer.classList.add("hidden");
+      container.innerHTML = "";
+      if (data.length === 0) {
         emptyState.classList.remove("hidden");
         return;
       }
-
       emptyState.classList.add("hidden");
-      cardsContainer.classList.remove("hidden");
 
       // เรียงจากข้อมูลใหม่สุดไปเก่าสุด
-      const reversedData = [...data].reverse();
-
-      reversedData.forEach((item, index) => {
-        const card = document.createElement("div");
-        card.className = "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
-
-        const entries = Object.entries(item);
-        let fieldsHtml = entries.map(([key, value]) => {
-          const isTimestamp = key.toLowerCase().includes("timestamp") || key.toLowerCase().includes("ประทับเวลา");
+      [...data].reverse().forEach((item) => {
+        const number = rawData.indexOf(item) + 1;
+        const fieldsHtml = Object.entries(item).map(([key, value]) => {
+          const isTimestamp = /timestamp|ประทับเวลา/i.test(key);
           return `
-            <div class="border-b border-slate-100 last:border-0 pb-2.5 mb-2.5 last:pb-0 last:mb-0">
-              <span class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block mb-0.5">${key}</span>
-              <p class="text-sm font-medium ${isTimestamp ? 'text-indigo-600 text-xs' : 'text-slate-800'} break-words whitespace-pre-wrap">${value || '-'}</p>
-            </div>
-          `;
+            <div class="border-b border-white/5 last:border-0 pb-2.5 mb-2.5 last:pb-0 last:mb-0">
+              <span class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block mb-0.5">${escapeHtml(key)}</span>
+              <p class="text-sm ${isTimestamp ? "text-amber-300 text-xs" : "text-slate-100"} break-words whitespace-pre-wrap">${escapeHtml(value) || "-"}</p>
+            </div>`;
         }).join("");
 
+        const card = document.createElement("div");
+        card.className = "glass p-5 rounded-2xl hover:bg-white/10 transition";
         card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md">#${data.length - index}</span>
-            </div>
-            ${fieldsHtml}
-          </div>
-        `;
-
-        cardsContainer.appendChild(card);
+          <span class="inline-block text-[10px] font-bold px-2 py-0.5 bg-amber-400/20 text-amber-300 rounded-md mb-3">#${number}</span>
+          ${fieldsHtml}`;
+        container.appendChild(card);
       });
     }
 
-    function handleSearch() {
-      const query = document.getElementById("search-input").value.trim().toLowerCase();
-      if (!query) {
-        renderCards(rawData);
-        return;
-      }
-
-      const filtered = rawData.filter(item => {
-        return Object.values(item).some(val => 
-          String(val).toLowerCase().includes(query)
-        );
-      });
-
-      renderCards(filtered);
-    }
-
-    // เรียกดึงข้อมูลทันทีเมื่อเปิดหน้า
     document.addEventListener("DOMContentLoaded", () => {
       fetchData();
+      setInterval(() => { if (!document.hidden) fetchData(true); }, AUTO_REFRESH_MS);
     });
   </script>
 </body>
