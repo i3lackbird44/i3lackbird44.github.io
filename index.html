@@ -14,18 +14,154 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+    :root {
+      --font-scale: 100%;
+    }
+    html {
+      font-size: var(--font-scale);
+    }
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(ellipse at top, #312e81 0%, #1e1b4b 45%, #0f0a2e 100%);
-      background-attachment: fixed;
+      transition: background 0.3s ease, color 0.3s ease;
     }
     #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-    .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-    .num-glow { text-shadow: 0 0 30px rgba(251,191,36,0.35); }
-    .num-glow-cyan { text-shadow: 0 0 30px rgba(56,189,248,0.35); }
+
+    /* === DARK THEME (DEFAULT) === */
+    body.theme-dark {
+      background: radial-gradient(ellipse at top, #312e81 0%, #1e1b4b 45%, #0f0a2e 100%);
+      background-attachment: fixed;
+      color: #f1f5f9;
+    }
+    body.theme-dark .glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    body.theme-dark .sub-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    body.theme-dark .sub-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    body.theme-dark .card-header-border {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    body.theme-dark .sub-label-text {
+      color: #cbd5e1;
+    }
+    body.theme-dark .sub-note-text {
+      color: #94a3b8;
+    }
+    body.theme-dark .hero-title {
+      color: #ffffff;
+    }
+    body.theme-dark .hero-subtitle {
+      color: #fcd34d;
+    }
+    body.theme-dark .top-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+    }
+    body.theme-dark .top-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+    body.theme-dark .num-glow {
+      text-shadow: 0 0 30px rgba(251, 191, 36, 0.35);
+    }
+    body.theme-dark .num-glow-cyan {
+      text-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+    }
+    body.theme-dark #display-label-1 {
+      color: #fcd34d;
+    }
+    body.theme-dark #display-label-2 {
+      color: #7dd3fc;
+    }
+    body.theme-dark #stat-participants-1,
+    body.theme-dark #stat-submissions-1 {
+      color: #fcd34d;
+    }
+    body.theme-dark #stat-participants-2,
+    body.theme-dark #stat-submissions-2 {
+      color: #38bdf8;
+    }
+
+    /* === BRIGHT THEME === */
+    body.theme-bright {
+      background: radial-gradient(ellipse at top, #e0e7ff 0%, #f1f5f9 45%, #f8fafc 100%);
+      background-attachment: fixed;
+      color: #1e293b;
+    }
+    body.theme-bright .glass {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+    }
+    body.theme-bright .sub-card {
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+    body.theme-bright .sub-card:hover {
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+    body.theme-bright .card-header-border {
+      border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    }
+    body.theme-bright .sub-label-text {
+      color: #475569;
+    }
+    body.theme-bright .sub-note-text {
+      color: #64748b;
+    }
+    body.theme-bright .hero-title {
+      color: #0f172a;
+    }
+    body.theme-bright .hero-subtitle {
+      color: #b45309;
+    }
+    body.theme-bright .top-btn {
+      background: rgba(15, 23, 42, 0.06);
+      color: #334155;
+    }
+    body.theme-bright .top-btn:hover {
+      background: rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+    }
+    body.theme-bright .num-glow {
+      text-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+    body.theme-bright .num-glow-cyan {
+      text-shadow: 0 0 25px rgba(14, 165, 233, 0.25);
+    }
+    body.theme-bright #display-label-1 {
+      color: #b45309;
+    }
+    body.theme-bright #display-label-2 {
+      color: #0369a1;
+    }
+    body.theme-bright #stat-participants-1,
+    body.theme-bright #stat-submissions-1 {
+      color: #d97706;
+    }
+    body.theme-bright #stat-participants-2,
+    body.theme-bright #stat-submissions-2 {
+      color: #0284c7;
+    }
+    body.theme-bright #top-bar {
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    body.theme-bright footer {
+      color: #64748b;
+    }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col">
+<body class="theme-dark min-h-screen flex flex-col">
 
   <!-- Three.js background: confetti + fireworks -->
   <canvas id="bg"></canvas>
@@ -42,10 +178,14 @@
           <span class="font-semibold text-sm sm:text-base">Form Celebration</span>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ตั้งค่า">
+          <!-- Quick Theme Toggle Button -->
+          <button id="theme-toggle-btn" onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 rounded-lg transition top-btn" title="สลับธีม สว่าง/มืด">
+            <i id="theme-toggle-icon" class="ph-bold ph-sun text-sm"></i>
+          </button>
+          <button onclick="toggleConfigModal()" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition top-btn" title="ตั้งค่า">
             <i class="ph-bold ph-gear text-sm"></i><span class="hidden sm:inline">ตั้งค่า</span>
           </button>
-          <button onclick="toggleHeader(false)" class="flex items-center justify-center w-8 h-8 text-slate-200 bg-white/10 hover:bg-white/20 rounded-lg transition" title="ซ่อนแถบด้านบน (H)">
+          <button onclick="toggleHeader(false)" class="flex items-center justify-center w-8 h-8 rounded-lg transition top-btn" title="ซ่อนแถบด้านบน (H)">
             <i class="ph-bold ph-caret-up text-sm"></i>
           </button>
         </div>
@@ -73,8 +213,8 @@
 
       <!-- Hero Title -->
       <section class="text-center mb-8">
-        <p class="text-amber-300 text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
-        <h1 class="text-3xl sm:text-4xl font-bold">ยอดผู้ร่วมกิจกรรมของเรา</h1>
+        <p class="hero-subtitle text-sm font-medium tracking-wide mb-2">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
+        <h1 class="hero-title text-3xl sm:text-4xl font-bold">ยอดผู้ร่วมกิจกรรมของเรา</h1>
       </section>
 
       <!-- Container แสดงชุดข้อมูล (รองรับทั้ง 1 ชุด และ 2 ชุด) -->
@@ -83,13 +223,13 @@
 
           <!-- ชุดที่ 1 -->
           <section id="section-set1" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
-            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+            <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(1, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
                 <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
-                <h2 id="display-label-1" class="text-lg font-bold text-amber-300 group-hover:text-amber-200 transition">ชุดที่ 1</h2>
-                <i class="ph-bold ph-pencil-simple text-xs text-amber-300/50 group-hover:text-amber-200 transition"></i>
+                <h2 id="display-label-1" class="text-lg font-bold group-hover:opacity-80 transition">ชุดที่ 1</h2>
+                <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
-              <div class="text-xs text-slate-400 flex items-center gap-1">
+              <div class="text-xs sub-note-text flex items-center gap-1">
                 <span id="live-dot-1" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
                 <span id="live-label-1">รอเชื่อมต่อ</span>
               </div>
@@ -97,33 +237,33 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- ผู้เข้าร่วม ชุดที่ 1 -->
-              <button onclick="openConfigForSet(1)" class="bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
-                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 1">
+                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
                   <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
                 </div>
-                <div id="stat-participants-1" class="num-glow text-5xl sm:text-6xl font-bold text-amber-300" data-value="0">-</div>
-                <div id="participants-note-1" class="text-xs text-slate-400 mt-2">คน</div>
+                <div id="stat-participants-1" class="num-glow text-5xl sm:text-6xl font-bold" data-value="0">-</div>
+                <div id="participants-note-1" class="text-xs sub-note-text mt-2">คน</div>
               </button>
               <!-- ยอด submit ชุดที่ 1 -->
-              <div class="bg-white/5 border border-white/5 rounded-2xl p-6 text-center">
-                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+              <div class="sub-card rounded-2xl p-6 text-center transition">
+                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
                   <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
                 </div>
-                <div id="stat-submissions-1" class="num-glow text-5xl sm:text-6xl font-bold text-amber-300" data-value="0">0</div>
-                <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
+                <div id="stat-submissions-1" class="num-glow text-5xl sm:text-6xl font-bold" data-value="0">0</div>
+                <div class="text-xs sub-note-text mt-2">ครั้ง</div>
               </div>
             </div>
           </section>
 
           <!-- ชุดที่ 2 -->
           <section id="section-set2" class="glass rounded-3xl p-6 sm:p-7 relative transition-all duration-300">
-            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+            <div class="flex items-center justify-between card-header-border border-b pb-4 mb-6">
               <div onclick="openConfigForSet(2, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
                 <span class="w-3 h-3 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50"></span>
-                <h2 id="display-label-2" class="text-lg font-bold text-sky-300 group-hover:text-sky-200 transition">ชุดที่ 2</h2>
-                <i class="ph-bold ph-pencil-simple text-xs text-sky-300/50 group-hover:text-sky-200 transition"></i>
+                <h2 id="display-label-2" class="text-lg font-bold group-hover:opacity-80 transition">ชุดที่ 2</h2>
+                <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
-              <div class="text-xs text-slate-400 flex items-center gap-1">
+              <div class="text-xs sub-note-text flex items-center gap-1">
                 <span id="live-dot-2" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
                 <span id="live-label-2">รอเชื่อมต่อ</span>
               </div>
@@ -131,20 +271,20 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- ผู้เข้าร่วม ชุดที่ 2 -->
-              <button onclick="openConfigForSet(2)" class="bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
-                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition" title="กดเพื่อแก้ไขยอดผู้เข้าร่วมชุดที่ 2">
+                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
                   <i class="ph-bold ph-users-three text-lg text-pink-400"></i>ผู้เข้าร่วมทั้งหมด
                 </div>
-                <div id="stat-participants-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold text-sky-300" data-value="0">-</div>
-                <div id="participants-note-2" class="text-xs text-slate-400 mt-2">คน</div>
+                <div id="stat-participants-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold" data-value="0">-</div>
+                <div id="participants-note-2" class="text-xs sub-note-text mt-2">คน</div>
               </button>
               <!-- ยอด submit ชุดที่ 2 -->
-              <div class="bg-white/5 border border-white/5 rounded-2xl p-6 text-center">
-                <div class="flex items-center justify-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+              <div class="sub-card rounded-2xl p-6 text-center transition">
+                <div class="flex items-center justify-center gap-2 sub-label-text text-xs sm:text-sm mb-2">
                   <i class="ph-bold ph-paper-plane-tilt text-lg text-sky-400"></i>ยอดการ Submit
                 </div>
-                <div id="stat-submissions-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold text-sky-300" data-value="0">0</div>
-                <div class="text-xs text-slate-400 mt-2">ครั้ง</div>
+                <div id="stat-submissions-2" class="num-glow-cyan text-5xl sm:text-6xl font-bold" data-value="0">0</div>
+                <div class="text-xs sub-note-text mt-2">ครั้ง</div>
               </div>
             </div>
           </section>
@@ -152,8 +292,8 @@
         </div>
       </div>
 
-      <p class="text-center text-xs text-slate-400 mt-8">
-        อัปเดตล่าสุด: <span id="last-updated" class="text-slate-200">-</span>
+      <p class="text-center text-xs sub-note-text mt-8">
+        อัปเดตล่าสุด: <span id="last-updated" class="font-medium">-</span>
         <span class="mx-1">•</span> ตรวจสอบข้อมูลอัตโนมัติทุก 1 วินาที
       </p>
 
@@ -203,6 +343,54 @@
             <input type="radio" name="modal-view-mode" value="set2" class="text-sky-400 focus:ring-0" />
             <span id="modal-view-label-2" class="text-xs font-medium text-slate-200 truncate">ชุดที่ 2</span>
           </label>
+        </div>
+      </div>
+
+      <!-- Appearance: Theme & Font Scaling -->
+      <div class="p-4 rounded-2xl bg-white/5 border border-white/10 mb-5 space-y-4">
+        <!-- Theme Selection -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-200 mb-2 flex items-center gap-1.5">
+            <i class="ph-bold ph-palette text-amber-400"></i>ธีมสีหน้าจอ (Theme)
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+              <input type="radio" name="modal-theme" value="dark" onchange="applyTheme('dark')" class="text-amber-400 focus:ring-0" />
+              <i class="ph-bold ph-moon text-indigo-400 text-sm"></i>
+              <span class="text-xs font-medium text-slate-200">ธีมมืด (Dark)</span>
+            </label>
+            <label class="cursor-pointer border border-white/10 rounded-xl p-2.5 flex items-center justify-center gap-2 transition hover:bg-white/5 has-[:checked]:bg-amber-400/20 has-[:checked]:border-amber-400">
+              <input type="radio" name="modal-theme" value="bright" onchange="applyTheme('bright')" class="text-amber-400 focus:ring-0" />
+              <i class="ph-bold ph-sun text-amber-400 text-sm"></i>
+              <span class="text-xs font-medium text-slate-200">ธีมสว่าง (Bright)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Font Scale Slider -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label for="modal-font-scale" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <i class="ph-bold ph-text-aa text-amber-400"></i>ขนาดตัวอักษรทั้งหมด (Font Scale)
+            </label>
+            <span id="font-scale-badge" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 text-xs font-bold">100%</span>
+          </div>
+          <input 
+            type="range" 
+            id="modal-font-scale" 
+            min="75" 
+            max="150" 
+            step="5" 
+            value="100" 
+            oninput="handleFontScaleInput(this.value)"
+            class="w-full accent-amber-400 cursor-pointer mb-2" 
+          />
+          <div class="grid grid-cols-4 gap-1 text-[11px]">
+            <button type="button" onclick="handleFontScaleInput(85)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">เล็ก (85%)</button>
+            <button type="button" onclick="handleFontScaleInput(100)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ปกติ (100%)</button>
+            <button type="button" onclick="handleFontScaleInput(115)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ใหญ่ (115%)</button>
+            <button type="button" onclick="handleFontScaleInput(130)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">ใหญ่พิเศษ (130%)</button>
+          </div>
         </div>
       </div>
 
@@ -504,6 +692,41 @@
     // View Mode: 'both' | 'set1' | 'set2'
     let currentViewMode = localStorage.getItem("active_view_mode") || "both";
 
+    // Theme: 'dark' | 'bright'
+    let currentTheme = localStorage.getItem("app_theme") || "dark";
+    // Font scale percentage (e.g. 100)
+    let currentFontScale = Number(localStorage.getItem("font_scale")) || 100;
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      document.body.className = `theme-${theme} min-h-screen flex flex-col`;
+      const icon = document.getElementById("theme-toggle-icon");
+      if (icon) {
+        icon.className = theme === "dark" ? "ph-bold ph-sun text-sm" : "ph-bold ph-moon text-sm";
+      }
+      const radio = document.querySelector(`input[name="modal-theme"][value="${theme}"]`);
+      if (radio) radio.checked = true;
+      localStorage.setItem("app_theme", theme);
+    }
+
+    function toggleTheme() {
+      applyTheme(currentTheme === "dark" ? "bright" : "dark");
+    }
+
+    function applyFontScale(scale) {
+      currentFontScale = Number(scale);
+      document.documentElement.style.fontSize = `${scale}%`;
+      const badge = document.getElementById("font-scale-badge");
+      if (badge) badge.textContent = `${scale}%`;
+      const slider = document.getElementById("modal-font-scale");
+      if (slider) slider.value = scale;
+      localStorage.setItem("font_scale", String(scale));
+    }
+
+    function handleFontScaleInput(val) {
+      applyFontScale(Number(val));
+    }
+
     function getSetLabel(setId) {
       return localStorage.getItem(`dataset_label_${setId}`) || DEFAULT_CONFIG[`set${setId}`].label;
     }
@@ -674,6 +897,14 @@
       const modeRadio = document.querySelector(`input[name="modal-view-mode"][value="${currentViewMode}"]`);
       if (modeRadio) modeRadio.checked = true;
 
+      // Theme & Font Scale
+      const themeRadio = document.querySelector(`input[name="modal-theme"][value="${currentTheme}"]`);
+      if (themeRadio) themeRadio.checked = true;
+      const slider = document.getElementById("modal-font-scale");
+      if (slider) slider.value = currentFontScale;
+      const badge = document.getElementById("font-scale-badge");
+      if (badge) badge.textContent = `${currentFontScale}%`;
+
       const p1 = getParticipants(1);
       const p2 = getParticipants(2);
       document.getElementById("modal-participants-1").value = p1 === null ? "" : p1;
@@ -700,6 +931,10 @@
       // View Mode
       const selectedMode = document.querySelector('input[name="modal-view-mode"]:checked')?.value || "both";
       setViewMode(selectedMode);
+
+      // Theme
+      const chosenTheme = document.querySelector('input[name="modal-theme"]:checked')?.value || currentTheme;
+      applyTheme(chosenTheme);
 
       // Set 1
       const l1 = document.getElementById("modal-label-1").value.trim() || "ชุดที่ 1";
@@ -818,6 +1053,8 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
+      applyTheme(currentTheme);
+      applyFontScale(currentFontScale);
       toggleHeader(localStorage.getItem("header_hidden") !== "1");
       renderLabels();
       renderParticipantsAll();
