@@ -88,12 +88,16 @@
     }
     #display-label-1,
     #stat-participants-1,
-    #stat-submissions-1 {
+    #stat-inprogress-1,
+    #stat-submissions-1,
+    #stat-percent-1 {
       color: var(--color-set-1);
     }
     #display-label-2,
     #stat-participants-2,
-    #stat-submissions-2 {
+    #stat-inprogress-2,
+    #stat-submissions-2,
+    #stat-percent-2 {
       color: var(--color-set-2);
     }
 
@@ -271,21 +275,37 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- กำลังทำ ชุดที่ 1 -->
-              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดกำลังทำชุดที่ 1">
+              <!-- 1. จำนวนทั้งหมด ชุดที่ 1 -->
+              <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 1">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-users-three text-pink-400"></i><span>กำลังทำ</span>
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                 </div>
                 <div id="stat-participants-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                 <div id="participants-note-1" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
-              <!-- เสร็จแล้ว ชุดที่ 1 -->
+              <!-- 2. กำลังทำ ชุดที่ 1 -->
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
+                </div>
+                <div id="stat-inprogress-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="inprogress-note-1" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
+              </div>
+              <!-- 3. เสร็จแล้ว ชุดที่ 1 -->
               <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
                   <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                 </div>
                 <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
-                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
+                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
+              </div>
+              <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 1 -->
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
+                </div>
+                <div id="stat-percent-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="percent-note-1" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
               </div>
             </div>
           </section>
@@ -305,21 +325,37 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- กำลังทำ ชุดที่ 2 -->
-              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขยอดกำลังทำชุดที่ 2">
+              <!-- 1. จำนวนทั้งหมด ชุดที่ 2 -->
+              <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 2">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
-                  <i class="ph-bold ph-users-three text-pink-400"></i><span>กำลังทำ</span>
+                  <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                 </div>
                 <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                 <div id="participants-note-2" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
               </button>
-              <!-- เสร็จแล้ว ชุดที่ 2 -->
+              <!-- 2. กำลังทำ ชุดที่ 2 -->
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
+                </div>
+                <div id="stat-inprogress-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="inprogress-note-2" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
+              </div>
+              <!-- 3. เสร็จแล้ว ชุดที่ 2 -->
               <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
                 <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
                   <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                 </div>
                 <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
-                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">ครั้ง</div>
+                <div class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">คน</div>
+              </div>
+              <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 2 -->
+              <div class="sub-card rounded-2xl p-6 text-center transition flex flex-col justify-between">
+                <div class="flex items-center justify-center gap-2 sub-label-text font-medium mb-1" style="font-size: var(--size-metric-label);">
+                  <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
+                </div>
+                <div id="stat-percent-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                <div id="percent-note-2" class="sub-note-text mt-1" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
               </div>
             </div>
           </section>
@@ -650,7 +686,7 @@
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
             </div>
             <div>
-              <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">ยอดกำลังทำ (คน)</label>
+              <label for="modal-participants-1" class="block text-xs font-medium text-slate-300 mb-1">จำนวนทั้งหมด (คน)</label>
               <input type="number" min="0" step="1" id="modal-participants-1" placeholder="เช่น 100"
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
             </div>
@@ -675,7 +711,7 @@
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
             </div>
             <div>
-              <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">ยอดกำลังทำ (คน)</label>
+              <label for="modal-participants-2" class="block text-xs font-medium text-slate-300 mb-1">จำนวนทั้งหมด (คน)</label>
               <input type="number" min="0" step="1" id="modal-participants-2" placeholder="เช่น 100"
                 class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
             </div>
@@ -1160,7 +1196,10 @@
       return Number.isInteger(n) && n >= 1 ? n : DEFAULT_FIREWORK_LOOPS;
     }
 
-    function animateNumber(el, to) {
+    let latestSubmissions = { 1: 0, 2: 0 };
+
+    function animateNumber(el, to, suffix = "") {
+      if (!el) return;
       const from = Number(el.dataset.value || 0);
       if (from === to && el.textContent !== "-") return;
       el.dataset.value = to;
@@ -1168,7 +1207,7 @@
       function step(now) {
         const p = Math.min((now - start) / dur, 1);
         const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(from + (to - from) * eased).toLocaleString("th-TH");
+        el.textContent = Math.round(from + (to - from) * eased).toLocaleString("th-TH") + suffix;
         if (p < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
@@ -1181,20 +1220,45 @@
       document.getElementById("display-label-2").textContent = l2;
     }
 
-    function renderParticipantsAll() {
-      [1, 2].forEach(setId => {
-        const el = document.getElementById(`stat-participants-${setId}`);
-        const note = document.getElementById(`participants-note-${setId}`);
-        const val = getParticipants(setId);
-        if (val === null || Number.isNaN(val)) {
-          el.textContent = "-";
-          el.dataset.value = 0;
-          note.textContent = "กดเพื่อกรอกยอด";
+    function updateSetDerivedStats(setId) {
+      const total = getParticipants(setId);
+      const submissions = latestSubmissions[setId] || 0;
+
+      const elTotal = document.getElementById(`stat-participants-${setId}`);
+      const noteTotal = document.getElementById(`participants-note-${setId}`);
+      const elInProgress = document.getElementById(`stat-inprogress-${setId}`);
+      const noteInProgress = document.getElementById(`inprogress-note-${setId}`);
+      const elPercent = document.getElementById(`stat-percent-${setId}`);
+      const notePercent = document.getElementById(`percent-note-${setId}`);
+
+      if (total === null || Number.isNaN(total)) {
+        if (elTotal) { elTotal.textContent = "-"; elTotal.dataset.value = 0; }
+        if (noteTotal) noteTotal.textContent = "กดเพื่อกรอกยอด";
+        if (elInProgress) { elInProgress.textContent = "-"; elInProgress.dataset.value = 0; }
+        if (noteInProgress) noteInProgress.textContent = "รอระบุจำนวนทั้งหมด";
+        if (elPercent) { elPercent.textContent = "-"; elPercent.dataset.value = 0; }
+        if (notePercent) notePercent.textContent = "รอระบุจำนวนทั้งหมด";
+      } else {
+        animateNumber(elTotal, total);
+        if (noteTotal) noteTotal.textContent = "คน";
+
+        const inProgress = Math.max(0, total - submissions);
+        animateNumber(elInProgress, inProgress);
+        if (noteInProgress) noteInProgress.textContent = "คน";
+
+        if (total > 0) {
+          const pct = Math.round((submissions / total) * 100);
+          animateNumber(elPercent, pct, "%");
+          if (notePercent) notePercent.textContent = "เปอร์เซ็นต์";
         } else {
-          animateNumber(el, val);
-          note.textContent = "คน";
+          if (elPercent) { elPercent.textContent = "0%"; elPercent.dataset.value = 0; }
+          if (notePercent) notePercent.textContent = "เปอร์เซ็นต์";
         }
-      });
+      }
+    }
+
+    function renderParticipantsAll() {
+      [1, 2].forEach(setId => updateSetDerivedStats(setId));
     }
 
     // สลับโหมดการแสดงผล (ทั้ง 2 ชุด / ชุดที่ 1 / ชุดที่ 2)
@@ -1250,7 +1314,9 @@
     }
 
     function onSubmissions(setId, submissions) {
+      latestSubmissions[setId] = submissions;
       animateNumber(document.getElementById(`stat-submissions-${setId}`), submissions);
+      updateSetDerivedStats(setId);
 
       const label = getSetLabel(setId);
       const isFirst = setId === 1 ? firstLoad1 : firstLoad2;
