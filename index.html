@@ -692,8 +692,16 @@
             </div>
             <div>
               <label for="modal-api-url-1" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 1)</label>
+              <select id="modal-api-url-1-select" onchange="toggleApiUrlInput(1)"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                <option value="https://script.google.com/macros/s/AKfycbwAlhmY9q7g7afC0NLxjCKHFMZlvpFjVilTwyo6k1jOrnr4SBHC0mQhPBrgsqLiHe2DEA/exec">Beginner Pre-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbxBG0OeKYgO45rI3PO-UVuJ1cHyCgdu45YMFyG7ud4o2tVFaa5e1Kw2gZ1yPNZZ8rEU/exec">Beginner Post-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbyHJbI_eFTaDVkmXnp1rW6raz3S--CZ0vSn9t8f0pBra7J5hKrZv3thAEa36Psdp7bfDg/exec">Intermediate Pre-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbxl1l_1SbgTuYHA7-eCruSj63gvaMR-L_SeZaEbh87tGaSyYuWviF4Ah_xn9nE5bbRjQA/exec">Intermediate Post-test</option>
+                <option value="other" selected>Other</option>
+              </select>
               <input type="url" id="modal-api-url-1" placeholder="https://script.google.com/macros/s/.../exec"
-                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+                class="mt-2 w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400" />
             </div>
           </div>
         </div>
@@ -717,8 +725,16 @@
             </div>
             <div>
               <label for="modal-api-url-2" class="block text-xs font-medium text-slate-300 mb-1">Google Apps Script Web App URL (ชุดที่ 2)</label>
+              <select id="modal-api-url-2-select" onchange="toggleApiUrlInput(2)"
+                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400">
+                <option value="https://script.google.com/macros/s/AKfycbwAlhmY9q7g7afC0NLxjCKHFMZlvpFjVilTwyo6k1jOrnr4SBHC0mQhPBrgsqLiHe2DEA/exec">Beginner Pre-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbxBG0OeKYgO45rI3PO-UVuJ1cHyCgdu45YMFyG7ud4o2tVFaa5e1Kw2gZ1yPNZZ8rEU/exec">Beginner Post-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbyHJbI_eFTaDVkmXnp1rW6raz3S--CZ0vSn9t8f0pBra7J5hKrZv3thAEa36Psdp7bfDg/exec">Intermediate Pre-test</option>
+                <option value="https://script.google.com/macros/s/AKfycbxl1l_1SbgTuYHA7-eCruSj63gvaMR-L_SeZaEbh87tGaSyYuWviF4Ah_xn9nE5bbRjQA/exec">Intermediate Post-test</option>
+                <option value="other" selected>Other</option>
+              </select>
               <input type="url" id="modal-api-url-2" placeholder="https://script.google.com/macros/s/.../exec"
-                class="w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
+                class="mt-2 w-full px-3 py-2 text-xs bg-slate-800 border border-white/10 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400" />
             </div>
           </div>
         </div>
@@ -1180,6 +1196,28 @@
       return localStorage.getItem(`gas_api_url_${setId}`) || DEFAULT_CONFIG[`set${setId}`].url;
     }
 
+    function toggleApiUrlInput(setId) {
+      const select = document.getElementById(`modal-api-url-${setId}-select`);
+      const input = document.getElementById(`modal-api-url-${setId}`);
+      input.classList.toggle("hidden", select.value !== "other");
+    }
+
+    function setApiUrlInput(setId, url) {
+      const select = document.getElementById(`modal-api-url-${setId}-select`);
+      const input = document.getElementById(`modal-api-url-${setId}`);
+      const isPreset = Array.from(select.options).some(option => option.value === url && option.value !== "other");
+      select.value = isPreset ? url : "other";
+      input.value = isPreset ? "" : url;
+      toggleApiUrlInput(setId);
+    }
+
+    function getSelectedApiUrl(setId) {
+      const select = document.getElementById(`modal-api-url-${setId}-select`);
+      return select.value === "other"
+        ? document.getElementById(`modal-api-url-${setId}`).value.trim()
+        : select.value;
+    }
+
     function getParticipants(setId) {
       const saved = localStorage.getItem(`participants_total_${setId}`);
       if (saved !== null && saved !== "") return Number(saved);
@@ -1386,8 +1424,8 @@
       document.getElementById("modal-participants-1").value = p1 === null ? "" : p1;
       document.getElementById("modal-participants-2").value = p2 === null ? "" : p2;
 
-      document.getElementById("modal-api-url-1").value = getApiUrl(1);
-      document.getElementById("modal-api-url-2").value = getApiUrl(2);
+      setApiUrlInput(1, getApiUrl(1));
+      setApiUrlInput(2, getApiUrl(2));
 
       document.getElementById("modal-firework-loops").value = getFireworkLoops();
       updateLoopsHint();
@@ -1436,7 +1474,7 @@
       // Set 1
       const l1 = document.getElementById("modal-label-1").value.trim() || "ชุดที่ 1";
       localStorage.setItem("dataset_label_1", l1);
-      const url1 = document.getElementById("modal-api-url-1").value.trim();
+      const url1 = getSelectedApiUrl(1);
       if (url1) localStorage.setItem("gas_api_url_1", url1);
       else { localStorage.removeItem("gas_api_url_1"); localStorage.removeItem("gas_api_url"); }
       const p1 = document.getElementById("modal-participants-1").value.trim();
@@ -1446,7 +1484,7 @@
       // Set 2
       const l2 = document.getElementById("modal-label-2").value.trim() || "ชุดที่ 2";
       localStorage.setItem("dataset_label_2", l2);
-      const url2 = document.getElementById("modal-api-url-2").value.trim();
+      const url2 = getSelectedApiUrl(2);
       if (url2) localStorage.setItem("gas_api_url_2", url2);
       else localStorage.removeItem("gas_api_url_2");
       const p2 = document.getElementById("modal-participants-2").value.trim();
