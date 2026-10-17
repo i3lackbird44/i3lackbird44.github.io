@@ -21,12 +21,66 @@
       --size-metric-label: 14px;
       --size-stat-number: 64px;
       --size-unit-label: 12px;
+      --size-insight-text: 18px;
       --color-set-1: #23436d;
       --color-set-2: #D97706;
       --color-set-1-glow: rgba(35, 67, 109, 0.35);
       --color-set-2-glow: rgba(217, 119, 6, 0.35);
       --color-set-1-border: rgba(35, 67, 109, 0.45);
       --color-set-2-border: rgba(217, 119, 6, 0.45);
+    }
+    .insight-title {
+      font-size: calc(var(--size-insight-text) * 1.15);
+      line-height: 1.3;
+    }
+    .insight-body {
+      font-size: var(--size-insight-text);
+      line-height: 1.35;
+    }
+    .insight-sub {
+      font-size: calc(var(--size-insight-text) * 0.85);
+      line-height: 1.3;
+    }
+    .insight-pace-num {
+      font-size: calc(var(--size-insight-text) * 1.25);
+      line-height: 1.2;
+    }
+    .insight-score-num {
+      font-size: calc(var(--size-insight-text) * 2.35);
+      line-height: 1.1;
+    }
+    .insight-tab-btn {
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    body.theme-dark .insight-tab-btn {
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+    }
+    body.theme-dark .insight-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+    }
+    body.theme-dark .insight-tab-btn.active {
+      background: rgba(251, 191, 36, 0.22);
+      color: #fcd34d;
+      border-color: rgba(251, 191, 36, 0.5);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.18);
+    }
+    body.theme-bright .insight-tab-btn {
+      background: rgba(255, 255, 255, 0.75);
+      color: #475569;
+      border-color: rgba(203, 213, 225, 0.8);
+    }
+    body.theme-bright .insight-tab-btn:hover {
+      background: #ffffff;
+      color: #0f172a;
+    }
+    body.theme-bright .insight-tab-btn.active {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #f59e0b;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.18);
     }
     html {
       font-size: var(--font-scale);
@@ -233,7 +287,7 @@
       <i class="ph-bold ph-caret-down text-sm"></i>
     </button>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex-1 w-full flex flex-col justify-center">
+    <main class="max-w-[96vw] xl:max-w-[1760px] mx-auto px-3 sm:px-6 py-2.5 flex-1 w-full flex flex-col justify-center">
 
       <!-- Notice banner if not configured -->
       <div id="notice-banner" class="hidden mb-3 p-3 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm flex items-start justify-between gap-3 max-w-3xl mx-auto w-full">
@@ -248,7 +302,7 @@
       </div>
 
       <!-- Hero Title (Compact for Zero-Scroll) -->
-      <section class="text-center mb-3">
+      <section class="text-center mb-2.5">
         <p class="hero-subtitle text-xs sm:text-sm font-medium tracking-wide mb-0.5">🎉 ขอบคุณทุกคนที่ร่วมตอบแบบสอบถาม</p>
         <div onclick="openConfigHeroTitle()" class="inline-flex items-center justify-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขหัวข้อหลัก">
           <h1 id="hero-title-display" class="hero-title font-bold group-hover:opacity-85 transition leading-tight" style="font-size: var(--size-hero-title);">ยอดผู้ร่วมกิจกรรมของเรา</h1>
@@ -261,167 +315,192 @@
         <div id="sets-grid" class="grid grid-cols-1 gap-5 w-full transition-all duration-300">
 
           <!-- ชุดที่ 1 -->
-          <section id="section-set1" class="glass rounded-3xl p-4 sm:p-5 relative transition-all duration-300">
-            <div class="flex items-center justify-between card-header-border border-b pb-2.5 mb-3.5">
-              <div onclick="openConfigForSet(1, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span id="set-dot-1" class="w-3.5 h-3.5 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-1); box-shadow: 0 0 10px var(--color-set-1-glow);"></span>
+          <section id="section-set1" class="glass rounded-3xl p-4 sm:p-6 relative transition-all duration-300">
+            <div class="flex items-center justify-between card-header-border border-b pb-2.5 mb-4">
+              <div onclick="openConfigForSet(1, 'label')" class="flex items-center gap-2.5 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
+                <span id="set-dot-1" class="w-4 h-4 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-1); box-shadow: 0 0 10px var(--color-set-1-glow);"></span>
                 <h2 id="display-label-1" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 1</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
-              <div class="text-xs sub-note-text flex items-center gap-1">
-                <span id="live-dot-1" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
+              <div class="text-xs sm:text-sm sub-note-text flex items-center gap-1.5">
+                <span id="live-dot-1" class="inline-block w-2.5 h-2.5 rounded-full bg-slate-500"></span>
                 <span id="live-label-1">รอเชื่อมต่อ</span>
               </div>
             </div>
 
-            <div id="set-body-1" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-              <!-- ฝั่งซ้าย: 4 กล่องตัวเลขหลัก + Progress Bar + Pace Timeline -->
-              <div id="left-col-1" class="lg:col-span-12 flex flex-col justify-between gap-3">
-                <div class="grid grid-cols-2 gap-3 flex-1">
+            <div id="set-body-1" class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              <!-- ฝั่งซ้าย: 4 กล่องตัวเลขหลัก + Progress Bar -->
+              <div id="left-col-1" class="lg:col-span-12 flex flex-col justify-between gap-3.5">
+                <div class="grid grid-cols-2 gap-3.5 flex-1">
                   <!-- 1. จำนวนทั้งหมด ชุดที่ 1 -->
-                  <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 1">
+                  <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 1">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                     </div>
-                    <div id="stat-participants-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-participants-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="participants-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </button>
                   <!-- 2. กำลังทำ ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
                     </div>
-                    <div id="stat-inprogress-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-inprogress-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="inprogress-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 3. เสร็จแล้ว ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                     </div>
-                    <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">0</div>
                     <div class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
                     </div>
-                    <div id="stat-percent-1" class="num-glow font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-percent-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="percent-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
                   </div>
                 </div>
 
                 <!-- 1. Progress Bar & Milestone (แสดงเฉพาะโหมดดูทีละชุด) -->
-                <div id="insight-progress-1" class="hidden sub-card rounded-2xl p-3.5">
-                  <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                    <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                      <i class="ph-bold ph-flag-checkered text-emerald-400 text-sm"></i>
+                <div id="insight-progress-1" class="hidden sub-card rounded-2xl p-4 sm:p-5">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                    <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                      <i class="ph-bold ph-flag-checkered text-emerald-400"></i>
                       <span>ความคืบหน้า (Progress)</span>
                     </div>
-                    <span id="milestone-badge-1" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">รอระบุจำนวนทั้งหมด</span>
+                    <span id="milestone-badge-1" class="insight-sub font-semibold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">รอระบุจำนวนทั้งหมด</span>
                   </div>
-                  <div class="w-full h-3 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
+                  <div class="w-full h-4 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
                     <div id="progress-bar-fill-1" class="h-full rounded-full transition-all duration-700 ease-out" style="width: 0%; background-color: var(--color-set-1); box-shadow: 0 0 12px var(--color-set-1-glow);"></div>
                   </div>
-                  <div class="flex justify-between items-center text-[11px] sub-note-text mt-1.5">
+                  <div class="flex justify-between items-center insight-sub sub-note-text font-medium mt-2">
                     <span id="progress-detail-left-1">เสร็จแล้ว 0 คน</span>
                     <span id="progress-detail-right-1">เป้าหมาย - คน</span>
                   </div>
                 </div>
-
-                <!-- 2. Submission Pace & Timeline (แสดงเฉพาะโหมดดูทีละชุด) -->
-                <div id="insight-pace-1" class="hidden grid grid-cols-3 gap-2">
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-lightning"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">5 นาทีล่าสุด</div>
-                      <div id="pace-recent-1" class="text-xs sm:text-sm font-bold sub-label-text truncate">0 คน</div>
-                    </div>
-                  </div>
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-clock-clockwise"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">ส่งคนแรก</div>
-                      <div id="pace-first-1" class="text-xs font-semibold sub-label-text truncate">-</div>
-                    </div>
-                  </div>
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-pink-500/15 text-pink-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-clock-user"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">ส่งคนล่าสุด</div>
-                      <div id="pace-latest-1" class="text-xs font-semibold sub-label-text truncate">-</div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
-              <!-- ฝั่งขวา: Live Feed + Score Overview + Poll Highlight (แสดงเฉพาะโหมดดูทีละชุด) -->
-              <div id="extra-insights-1" class="hidden lg:col-span-7 flex flex-col justify-between gap-3">
-                <!-- แถวบนฝั่งขวา: Live Feed (ซ้าย) + Score Overview (ขวา) -->
-                <div id="insight-mid-grid-1" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-                  <!-- 3. Recent Submissions Live Feed -->
-                  <div id="insight-live_feed-1" class="sub-card rounded-2xl p-3.5 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                      <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                        <i class="ph-bold ph-users-four text-pink-400 text-sm"></i>
-                        <span>ผู้ส่งล่าสุด (5 คนล่าสุด)</span>
+              <!-- ฝั่งขวา: ระบบสลับหน้าจอ (Slide / Tab Switcher) แสดงข้อมูลตัวใหญ่เต็มตา -->
+              <div id="extra-insights-1" class="hidden lg:col-span-7 flex flex-col justify-between gap-3.5">
+                <!-- แถบควบคุมการสลับสไลด์ (Auto-Rotate / เลือกดูทีละหมวด / ดูรวม) -->
+                <div id="insight-tab-bar-1" class="flex flex-wrap items-center justify-between gap-2 sub-card rounded-2xl p-2 px-3">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button type="button" onclick="setInsightTab('auto')" data-insight-tab="auto" class="insight-tab-btn active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-arrows-clockwise"></i><span>สลับอัตโนมัติ</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('feed')" data-insight-tab="feed" id="tab-btn-feed-1" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-users-four text-pink-400"></i><span>ผู้ส่งล่าสุด & เวลา</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('score')" data-insight-tab="score" id="tab-btn-score-1" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-trophy text-amber-400"></i><span>สถิติคะแนน</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('poll')" data-insight-tab="poll" id="tab-btn-poll-1" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400"></i><span>ผลโพล AI</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('all')" data-insight-tab="all" class="insight-tab-btn px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1" title="แสดงทุกหมวดพร้อมกัน">
+                      <i class="ph-bold ph-squares-four"></i><span class="hidden sm:inline">ดูรวม</span>
+                    </button>
+                  </div>
+                  <div id="insight-slide-status-1" class="text-xs sub-note-text font-medium hidden xl:flex items-center gap-1.5 pr-1">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span class="insight-auto-label">สลับทุก 7 วินาที</span>
+                  </div>
+                </div>
+
+                <!-- สไลด์ที่ 1: ความเร็วการส่ง (Pace) + รายชื่อผู้ส่งล่าสุด 5 คน -->
+                <div id="slide-group-feed-1" class="flex-1 flex flex-col justify-between gap-3.5">
+                  <!-- 2. Submission Pace & Timeline -->
+                  <div id="insight-pace-1" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-lightning"></i>
                       </div>
-                      <span class="text-[10px] sub-note-text">Real-time</span>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">5 นาทีล่าสุด</div>
+                        <div id="pace-recent-1" class="insight-pace-num font-bold sub-label-text truncate">0 คน</div>
+                      </div>
                     </div>
-                    <div id="live-feed-list-1" class="space-y-1.5 flex-1 flex flex-col justify-center">
-                      <div class="text-xs sub-note-text py-4 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-sky-500/15 text-sky-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-clock-clockwise"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">ส่งคนแรก</div>
+                        <div id="pace-first-1" class="insight-pace-num font-bold sub-label-text truncate">-</div>
+                      </div>
+                    </div>
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-pink-500/15 text-pink-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-clock-user"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">ส่งคนล่าสุด</div>
+                        <div id="pace-latest-1" class="insight-pace-num font-bold sub-label-text truncate">-</div>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- 4. Score Overview & Distribution -->
-                  <div id="insight-score-1" class="sub-card rounded-2xl p-3.5 flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                          <i class="ph-bold ph-trophy text-amber-400 text-sm"></i>
-                          <span>สถิติคะแนนภาพรวม</span>
-                        </div>
-                        <span id="score-max-badge-1" class="text-[10px] sub-note-text">เต็ม 10 คะแนน</span>
+                  <!-- 3. Recent Submissions Live Feed -->
+                  <div id="insight-live_feed-1" class="sub-card rounded-2xl p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                        <i class="ph-bold ph-users-four text-pink-400"></i>
+                        <span>ผู้ส่งล่าสุด (5 คนล่าสุด)</span>
                       </div>
-                      <div class="grid grid-cols-3 gap-2 mb-2.5">
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">เฉลี่ย</div>
-                          <div id="score-avg-1" class="text-base sm:text-lg font-bold leading-tight mt-0.5" style="color: var(--color-set-1);">-</div>
-                        </div>
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">สูงสุด</div>
-                          <div id="score-max-1" class="text-base sm:text-lg font-bold text-emerald-500 leading-tight mt-0.5">-</div>
-                        </div>
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">ต่ำสุด</div>
-                          <div id="score-min-1" class="text-base sm:text-lg font-bold text-rose-500 leading-tight mt-0.5">-</div>
-                        </div>
-                      </div>
+                      <span class="insight-sub sub-note-text font-medium px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">Real-time</span>
                     </div>
-                    <div id="score-dist-1" class="space-y-1.5 text-xs">
-                      <div class="text-xs sub-note-text py-2 text-center">รอข้อมูลคะแนนจากผู้ตอบ</div>
+                    <div id="live-feed-list-1" class="space-y-2 flex-1 flex flex-col justify-center">
+                      <div class="insight-body sub-note-text py-6 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 5. AI Adoption Survey / Poll Highlight -->
-                <div id="insight-poll-1" class="sub-card rounded-2xl p-3.5">
-                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-                    <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400 text-sm"></i>
-                      <span id="poll-title-1" class="truncate max-w-md">สรุปผลโพล: แผนการนำ AI ไปช่วยยกระดับงาน</span>
+                <!-- สไลด์ที่ 2: 4. Score Overview & Distribution -->
+                <div id="insight-score-1" class="sub-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col justify-between gap-4">
+                  <div>
+                    <div class="flex items-center justify-between mb-3.5">
+                      <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                        <i class="ph-bold ph-trophy text-amber-400"></i>
+                        <span>สถิติคะแนนภาพรวม</span>
+                      </div>
+                      <span id="score-max-badge-1" class="insight-sub font-semibold px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">เต็ม 10 คะแนน</span>
                     </div>
-                    <span id="poll-total-votes-1" class="text-[10px] sub-note-text">0 คำตอบ</span>
+                    <div class="grid grid-cols-3 gap-3.5 mb-2">
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">คะแนนเฉลี่ย</div>
+                        <div id="score-avg-1" class="insight-score-num font-bold mt-1" style="color: var(--color-set-1);">-</div>
+                      </div>
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">สูงสุด</div>
+                        <div id="score-max-1" class="insight-score-num font-bold text-emerald-500 mt-1">-</div>
+                      </div>
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">ต่ำสุด</div>
+                        <div id="score-min-1" class="insight-score-num font-bold text-rose-500 mt-1">-</div>
+                      </div>
+                    </div>
                   </div>
-                  <div id="poll-bars-1" class="space-y-1.5">
-                    <div class="text-xs sub-note-text py-2 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>
+                  <div id="score-dist-1" class="space-y-3 flex-1 flex flex-col justify-center">
+                    <div class="insight-body sub-note-text py-4 text-center">รอข้อมูลคะแนนจากผู้ตอบ</div>
+                  </div>
+                </div>
+
+                <!-- สไลด์ที่ 3: 5. AI Adoption Survey / Poll Highlight -->
+                <div id="insight-poll-1" class="sub-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col justify-between gap-3">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400"></i>
+                      <span id="poll-title-1">สรุปผลโพล: แผนการนำ AI ไปช่วยยกระดับงาน</span>
+                    </div>
+                    <span id="poll-total-votes-1" class="insight-sub font-semibold px-3 py-1 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30">0 คำตอบ</span>
+                  </div>
+                  <div id="poll-bars-1" class="space-y-3.5 flex-1 flex flex-col justify-center">
+                    <div class="insight-body sub-note-text py-6 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>
                   </div>
                 </div>
               </div>
@@ -429,167 +508,192 @@
           </section>
 
           <!-- ชุดที่ 2 -->
-          <section id="section-set2" class="glass rounded-3xl p-4 sm:p-5 relative transition-all duration-300">
-            <div class="flex items-center justify-between card-header-border border-b pb-2.5 mb-3.5">
-              <div onclick="openConfigForSet(2, 'label')" class="flex items-center gap-2 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
-                <span id="set-dot-2" class="w-3.5 h-3.5 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-2); box-shadow: 0 0 10px var(--color-set-2-glow);"></span>
+          <section id="section-set2" class="glass rounded-3xl p-4 sm:p-6 relative transition-all duration-300">
+            <div class="flex items-center justify-between card-header-border border-b pb-2.5 mb-4">
+              <div onclick="openConfigForSet(2, 'label')" class="flex items-center gap-2.5 cursor-pointer group" title="คลิกเพื่อแก้ไขชื่อชุด">
+                <span id="set-dot-2" class="w-4 h-4 rounded-full shadow-sm flex-shrink-0" style="background-color: var(--color-set-2); box-shadow: 0 0 10px var(--color-set-2-glow);"></span>
                 <h2 id="display-label-2" class="font-bold group-hover:opacity-80 transition leading-tight" style="font-size: var(--size-set-title);">ชุดที่ 2</h2>
                 <i class="ph-bold ph-pencil-simple text-xs opacity-50 group-hover:opacity-100 transition"></i>
               </div>
-              <div class="text-xs sub-note-text flex items-center gap-1">
-                <span id="live-dot-2" class="inline-block w-2 h-2 rounded-full bg-slate-500"></span>
+              <div class="text-xs sm:text-sm sub-note-text flex items-center gap-1.5">
+                <span id="live-dot-2" class="inline-block w-2.5 h-2.5 rounded-full bg-slate-500"></span>
                 <span id="live-label-2">รอเชื่อมต่อ</span>
               </div>
             </div>
 
-            <div id="set-body-2" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-              <!-- ฝั่งซ้าย: 4 กล่องตัวเลขหลัก + Progress Bar + Pace Timeline -->
-              <div id="left-col-2" class="lg:col-span-12 flex flex-col justify-between gap-3">
-                <div class="grid grid-cols-2 gap-3 flex-1">
+            <div id="set-body-2" class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              <!-- ฝั่งซ้าย: 4 กล่องตัวเลขหลัก + Progress Bar -->
+              <div id="left-col-2" class="lg:col-span-12 flex flex-col justify-between gap-3.5">
+                <div class="grid grid-cols-2 gap-3.5 flex-1">
                   <!-- 1. จำนวนทั้งหมด ชุดที่ 2 -->
-                  <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 2">
+                  <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 2">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                     </div>
-                    <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="participants-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </button>
                   <!-- 2. กำลังทำ ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
                     </div>
-                    <div id="stat-inprogress-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-inprogress-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="inprogress-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 3. เสร็จแล้ว ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                     </div>
-                    <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">0</div>
                     <div class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-3.5 sm:p-4 text-center transition flex flex-col justify-between">
+                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
                     </div>
-                    <div id="stat-percent-2" class="num-glow-cyan font-bold leading-none my-1" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div id="stat-percent-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
                     <div id="percent-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
                   </div>
                 </div>
 
                 <!-- 1. Progress Bar & Milestone (แสดงเฉพาะโหมดดูทีละชุด) -->
-                <div id="insight-progress-2" class="hidden sub-card rounded-2xl p-3.5">
-                  <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                    <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                      <i class="ph-bold ph-flag-checkered text-emerald-400 text-sm"></i>
+                <div id="insight-progress-2" class="hidden sub-card rounded-2xl p-4 sm:p-5">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                    <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                      <i class="ph-bold ph-flag-checkered text-emerald-400"></i>
                       <span>ความคืบหน้า (Progress)</span>
                     </div>
-                    <span id="milestone-badge-2" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">รอระบุจำนวนทั้งหมด</span>
+                    <span id="milestone-badge-2" class="insight-sub font-semibold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">รอระบุจำนวนทั้งหมด</span>
                   </div>
-                  <div class="w-full h-3 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
+                  <div class="w-full h-4 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
                     <div id="progress-bar-fill-2" class="h-full rounded-full transition-all duration-700 ease-out" style="width: 0%; background-color: var(--color-set-2); box-shadow: 0 0 12px var(--color-set-2-glow);"></div>
                   </div>
-                  <div class="flex justify-between items-center text-[11px] sub-note-text mt-1.5">
+                  <div class="flex justify-between items-center insight-sub sub-note-text font-medium mt-2">
                     <span id="progress-detail-left-2">เสร็จแล้ว 0 คน</span>
                     <span id="progress-detail-right-2">เป้าหมาย - คน</span>
                   </div>
                 </div>
-
-                <!-- 2. Submission Pace & Timeline (แสดงเฉพาะโหมดดูทีละชุด) -->
-                <div id="insight-pace-2" class="hidden grid grid-cols-3 gap-2">
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-lightning"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">5 นาทีล่าสุด</div>
-                      <div id="pace-recent-2" class="text-xs sm:text-sm font-bold sub-label-text truncate">0 คน</div>
-                    </div>
-                  </div>
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-clock-clockwise"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">ส่งคนแรก</div>
-                      <div id="pace-first-2" class="text-xs font-semibold sub-label-text truncate">-</div>
-                    </div>
-                  </div>
-                  <div class="sub-card rounded-xl p-2.5 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-pink-500/15 text-pink-500 flex items-center justify-center text-base flex-shrink-0">
-                      <i class="ph-bold ph-clock-user"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <div class="text-[10px] sub-note-text truncate">ส่งคนล่าสุด</div>
-                      <div id="pace-latest-2" class="text-xs font-semibold sub-label-text truncate">-</div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
-              <!-- ฝั่งขวา: Live Feed + Score Overview + Poll Highlight (แสดงเฉพาะโหมดดูทีละชุด) -->
-              <div id="extra-insights-2" class="hidden lg:col-span-7 flex flex-col justify-between gap-3">
-                <!-- แถวบนฝั่งขวา: Live Feed (ซ้าย) + Score Overview (ขวา) -->
-                <div id="insight-mid-grid-2" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-                  <!-- 3. Recent Submissions Live Feed -->
-                  <div id="insight-live_feed-2" class="sub-card rounded-2xl p-3.5 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                      <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                        <i class="ph-bold ph-users-four text-pink-400 text-sm"></i>
-                        <span>ผู้ส่งล่าสุด (5 คนล่าสุด)</span>
+              <!-- ฝั่งขวา: ระบบสลับหน้าจอ (Slide / Tab Switcher) แสดงข้อมูลตัวใหญ่เต็มตา -->
+              <div id="extra-insights-2" class="hidden lg:col-span-7 flex flex-col justify-between gap-3.5">
+                <!-- แถบควบคุมการสลับสไลด์ (Auto-Rotate / เลือกดูทีละหมวด / ดูรวม) -->
+                <div id="insight-tab-bar-2" class="flex flex-wrap items-center justify-between gap-2 sub-card rounded-2xl p-2 px-3">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button type="button" onclick="setInsightTab('auto')" data-insight-tab="auto" class="insight-tab-btn active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-arrows-clockwise"></i><span>สลับอัตโนมัติ</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('feed')" data-insight-tab="feed" id="tab-btn-feed-2" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-users-four text-pink-400"></i><span>ผู้ส่งล่าสุด & เวลา</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('score')" data-insight-tab="score" id="tab-btn-score-2" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-trophy text-amber-400"></i><span>สถิติคะแนน</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('poll')" data-insight-tab="poll" id="tab-btn-poll-2" class="insight-tab-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400"></i><span>ผลโพล AI</span>
+                    </button>
+                    <button type="button" onclick="setInsightTab('all')" data-insight-tab="all" class="insight-tab-btn px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1" title="แสดงทุกหมวดพร้อมกัน">
+                      <i class="ph-bold ph-squares-four"></i><span class="hidden sm:inline">ดูรวม</span>
+                    </button>
+                  </div>
+                  <div id="insight-slide-status-2" class="text-xs sub-note-text font-medium hidden xl:flex items-center gap-1.5 pr-1">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span class="insight-auto-label">สลับทุก 7 วินาที</span>
+                  </div>
+                </div>
+
+                <!-- สไลด์ที่ 1: ความเร็วการส่ง (Pace) + รายชื่อผู้ส่งล่าสุด 5 คน -->
+                <div id="slide-group-feed-2" class="flex-1 flex flex-col justify-between gap-3.5">
+                  <!-- 2. Submission Pace & Timeline -->
+                  <div id="insight-pace-2" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-lightning"></i>
                       </div>
-                      <span class="text-[10px] sub-note-text">Real-time</span>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">5 นาทีล่าสุด</div>
+                        <div id="pace-recent-2" class="insight-pace-num font-bold sub-label-text truncate">0 คน</div>
+                      </div>
                     </div>
-                    <div id="live-feed-list-2" class="space-y-1.5 flex-1 flex flex-col justify-center">
-                      <div class="text-xs sub-note-text py-4 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-sky-500/15 text-sky-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-clock-clockwise"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">ส่งคนแรก</div>
+                        <div id="pace-first-2" class="insight-pace-num font-bold sub-label-text truncate">-</div>
+                      </div>
+                    </div>
+                    <div class="sub-card rounded-2xl p-3.5 sm:p-4 flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-pink-500/15 text-pink-500 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="ph-bold ph-clock-user"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <div class="insight-sub sub-note-text truncate">ส่งคนล่าสุด</div>
+                        <div id="pace-latest-2" class="insight-pace-num font-bold sub-label-text truncate">-</div>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- 4. Score Overview & Distribution -->
-                  <div id="insight-score-2" class="sub-card rounded-2xl p-3.5 flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                          <i class="ph-bold ph-trophy text-amber-400 text-sm"></i>
-                          <span>สถิติคะแนนภาพรวม</span>
-                        </div>
-                        <span id="score-max-badge-2" class="text-[10px] sub-note-text">เต็ม 10 คะแนน</span>
+                  <!-- 3. Recent Submissions Live Feed -->
+                  <div id="insight-live_feed-2" class="sub-card rounded-2xl p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                        <i class="ph-bold ph-users-four text-pink-400"></i>
+                        <span>ผู้ส่งล่าสุด (5 คนล่าสุด)</span>
                       </div>
-                      <div class="grid grid-cols-3 gap-2 mb-2.5">
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">เฉลี่ย</div>
-                          <div id="score-avg-2" class="text-base sm:text-lg font-bold leading-tight mt-0.5" style="color: var(--color-set-2);">-</div>
-                        </div>
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">สูงสุด</div>
-                          <div id="score-max-2" class="text-base sm:text-lg font-bold text-emerald-500 leading-tight mt-0.5">-</div>
-                        </div>
-                        <div class="rounded-xl p-2 bg-slate-500/10 text-center">
-                          <div class="text-[10px] sub-note-text">ต่ำสุด</div>
-                          <div id="score-min-2" class="text-base sm:text-lg font-bold text-rose-500 leading-tight mt-0.5">-</div>
-                        </div>
-                      </div>
+                      <span class="insight-sub sub-note-text font-medium px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">Real-time</span>
                     </div>
-                    <div id="score-dist-2" class="space-y-1.5 text-xs">
-                      <div class="text-xs sub-note-text py-2 text-center">รอข้อมูลคะแนนจากผู้ตอบ</div>
+                    <div id="live-feed-list-2" class="space-y-2 flex-1 flex flex-col justify-center">
+                      <div class="insight-body sub-note-text py-6 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 5. AI Adoption Survey / Poll Highlight -->
-                <div id="insight-poll-2" class="sub-card rounded-2xl p-3.5">
-                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-                    <div class="flex items-center gap-1.5 text-xs font-semibold sub-label-text">
-                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400 text-sm"></i>
-                      <span id="poll-title-2" class="truncate max-w-md">สรุปผลโพล: แผนการนำ AI ไปช่วยยกระดับงาน</span>
+                <!-- สไลด์ที่ 2: 4. Score Overview & Distribution -->
+                <div id="insight-score-2" class="sub-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col justify-between gap-4">
+                  <div>
+                    <div class="flex items-center justify-between mb-3.5">
+                      <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                        <i class="ph-bold ph-trophy text-amber-400"></i>
+                        <span>สถิติคะแนนภาพรวม</span>
+                      </div>
+                      <span id="score-max-badge-2" class="insight-sub font-semibold px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">เต็ม 10 คะแนน</span>
                     </div>
-                    <span id="poll-total-votes-2" class="text-[10px] sub-note-text">0 คำตอบ</span>
+                    <div class="grid grid-cols-3 gap-3.5 mb-2">
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">คะแนนเฉลี่ย</div>
+                        <div id="score-avg-2" class="insight-score-num font-bold mt-1" style="color: var(--color-set-2);">-</div>
+                      </div>
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">สูงสุด</div>
+                        <div id="score-max-2" class="insight-score-num font-bold text-emerald-500 mt-1">-</div>
+                      </div>
+                      <div class="rounded-2xl p-3.5 sm:p-4 bg-slate-500/10 border border-white/5 text-center">
+                        <div class="insight-sub sub-note-text font-medium">ต่ำสุด</div>
+                        <div id="score-min-2" class="insight-score-num font-bold text-rose-500 mt-1">-</div>
+                      </div>
+                    </div>
                   </div>
-                  <div id="poll-bars-2" class="space-y-1.5">
-                    <div class="text-xs sub-note-text py-2 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>
+                  <div id="score-dist-2" class="space-y-3 flex-1 flex flex-col justify-center">
+                    <div class="insight-body sub-note-text py-4 text-center">รอข้อมูลคะแนนจากผู้ตอบ</div>
+                  </div>
+                </div>
+
+                <!-- สไลด์ที่ 3: 5. AI Adoption Survey / Poll Highlight -->
+                <div id="insight-poll-2" class="sub-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col justify-between gap-3">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center gap-2 font-bold sub-label-text insight-title">
+                      <i class="ph-bold ph-chart-bar-horizontal text-sky-400"></i>
+                      <span id="poll-title-2">สรุปผลโพล: แผนการนำ AI ไปช่วยยกระดับงาน</span>
+                    </div>
+                    <span id="poll-total-votes-2" class="insight-sub font-semibold px-3 py-1 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30">0 คำตอบ</span>
+                  </div>
+                  <div id="poll-bars-2" class="space-y-3.5 flex-1 flex flex-col justify-center">
+                    <div class="insight-body sub-note-text py-6 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>
                   </div>
                 </div>
               </div>
@@ -833,7 +937,7 @@
             <!-- 5. Unit Label -->
             <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-300">5. หน่วยกำกับ (เช่น คน, ครั้ง)</span>
+                <span class="text-slate-300">5. หน่วยกำกับ (เช่น คน, เปอร์เซ็นต์)</span>
                 <span id="badge-size-unit-label" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">12px</span>
               </div>
               <input 
@@ -844,6 +948,24 @@
                 step="1" 
                 value="12" 
                 oninput="handleSpecificSizeInput('unit_label', this.value)"
+                class="w-full accent-amber-400 cursor-pointer" 
+              />
+            </div>
+
+            <!-- 6. Insight Text (Single-Set Extra Insights) -->
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300">6. ข้อมูลเพิ่มเติมเมื่อดูทีละชุด (ผู้ส่งล่าสุด, คะแนน, โพล)</span>
+                <span id="badge-size-insight-text" class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[11px]">18px</span>
+              </div>
+              <input 
+                type="range" 
+                id="input-size-insight-text" 
+                min="12" 
+                max="32" 
+                step="1" 
+                value="18" 
+                oninput="handleSpecificSizeInput('insight_text', this.value)"
                 class="w-full accent-amber-400 cursor-pointer" 
               />
             </div>
@@ -1304,13 +1426,14 @@
       applyFontScale(Number(val));
     }
 
-    // ขนาดตัวอักษรเฉพาะจุด (Hero Title, Set Title, Metric Label, Stat Number, Unit Label)
+    // ขนาดตัวอักษรเฉพาะจุด (Hero Title, Set Title, Metric Label, Stat Number, Unit Label, Insight Text)
     const DEFAULT_SPECIFIC_SIZES = {
       hero_title: 36,
       set_title: 20,
       metric_label: 14,
       stat_number: 64,
-      unit_label: 12
+      unit_label: 12,
+      insight_text: 18
     };
 
     const SPECIFIC_SIZE_VARS = {
@@ -1318,7 +1441,8 @@
       set_title: "--size-set-title",
       metric_label: "--size-metric-label",
       stat_number: "--size-stat-number",
-      unit_label: "--size-unit-label"
+      unit_label: "--size-unit-label",
+      insight_text: "--size-insight-text"
     };
 
     function getSpecificSize(type) {
@@ -1514,9 +1638,50 @@
     }
 
     const INSIGHT_KEYS = ["progress", "pace", "live_feed", "score", "poll"];
+    let currentInsightTab = localStorage.getItem("insight_active_tab") || "auto";
+    let autoSlideIndex = 0;
+    let autoSlideTimer = null;
 
     function isInsightEnabled(key) {
       return localStorage.getItem(`insight_enabled_${key}`) !== "0";
+    }
+
+    function getEnabledRightSlides() {
+      const slides = [];
+      if (isInsightEnabled("pace") || isInsightEnabled("live_feed")) slides.push("feed");
+      if (isInsightEnabled("score")) slides.push("score");
+      if (isInsightEnabled("poll")) slides.push("poll");
+      return slides;
+    }
+
+    function setInsightTab(tab) {
+      currentInsightTab = tab;
+      localStorage.setItem("insight_active_tab", tab);
+      if (tab === "auto") {
+        startInsightAutoTimer();
+      } else {
+        stopInsightAutoTimer();
+      }
+      applyInsightVisibility();
+    }
+
+    function startInsightAutoTimer() {
+      stopInsightAutoTimer();
+      autoSlideTimer = setInterval(() => {
+        if (currentInsightTab !== "auto") return;
+        const slides = getEnabledRightSlides();
+        if (slides.length > 1) {
+          autoSlideIndex = (autoSlideIndex + 1) % slides.length;
+          applyInsightVisibility();
+        }
+      }, 7000);
+    }
+
+    function stopInsightAutoTimer() {
+      if (autoSlideTimer) {
+        clearInterval(autoSlideTimer);
+        autoSlideTimer = null;
+      }
     }
 
     function initInsightTogglesInModal() {
@@ -1537,6 +1702,18 @@
     }
 
     function applyInsightVisibility() {
+      const enabledSlides = getEnabledRightSlides();
+      if (autoSlideIndex >= enabledSlides.length) {
+        autoSlideIndex = 0;
+      }
+      const activeSlideInAuto = enabledSlides[autoSlideIndex] || "feed";
+      const effectiveTab =
+        currentInsightTab === "auto"
+          ? activeSlideInAuto
+          : currentInsightTab !== "all" && !enabledSlides.includes(currentInsightTab)
+            ? activeSlideInAuto
+            : currentInsightTab;
+
       [1, 2].forEach(setId => {
         const isSingleThisSet =
           (currentViewMode === "set1" && setId === 1) || (currentViewMode === "set2" && setId === 2);
@@ -1544,37 +1721,72 @@
         const leftCol = document.getElementById(`left-col-${setId}`);
         const rightPane = document.getElementById(`extra-insights-${setId}`);
         const progEl = document.getElementById(`insight-progress-${setId}`);
+        const feedGroupEl = document.getElementById(`slide-group-feed-${setId}`);
         const paceEl = document.getElementById(`insight-pace-${setId}`);
         const lfEl = document.getElementById(`insight-live_feed-${setId}`);
         const scEl = document.getElementById(`insight-score-${setId}`);
         const pollEl = document.getElementById(`insight-poll-${setId}`);
-        const midGrid = document.getElementById(`insight-mid-grid-${setId}`);
+        const tabBar = document.getElementById(`insight-tab-bar-${setId}`);
+        const tabBtnFeed = document.getElementById(`tab-btn-feed-${setId}`);
+        const tabBtnScore = document.getElementById(`tab-btn-score-${setId}`);
+        const tabBtnPoll = document.getElementById(`tab-btn-poll-${setId}`);
+        const statusEl = document.getElementById(`insight-slide-status-${setId}`);
 
         const showProgress = isSingleThisSet && isInsightEnabled("progress");
-        const showPace = isSingleThisSet && isInsightEnabled("pace");
-        const showLf = isSingleThisSet && isInsightEnabled("live_feed");
-        const showSc = isSingleThisSet && isInsightEnabled("score");
-        const showPoll = isSingleThisSet && isInsightEnabled("poll");
-        const showRightPane = showLf || showSc || showPoll;
+        const enablePace = isSingleThisSet && isInsightEnabled("pace");
+        const enableLf = isSingleThisSet && isInsightEnabled("live_feed");
+        const enableFeedGroup = enablePace || enableLf;
+        const enableSc = isSingleThisSet && isInsightEnabled("score");
+        const enablePoll = isSingleThisSet && isInsightEnabled("poll");
+        const showRightPane = enableFeedGroup || enableSc || enablePoll;
 
         if (progEl) progEl.classList.toggle("hidden", !showProgress);
-        if (paceEl) paceEl.classList.toggle("hidden", !showPace);
-        if (lfEl) lfEl.classList.toggle("hidden", !showLf);
-        if (scEl) scEl.classList.toggle("hidden", !showSc);
-        if (pollEl) pollEl.classList.toggle("hidden", !showPoll);
 
-        if (midGrid) {
-          midGrid.classList.toggle("hidden", !showLf && !showSc);
-          midGrid.className = (showLf && showSc)
-            ? "grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1"
-            : "grid grid-cols-1 gap-3 flex-1";
+        // Hide/show individual tab buttons based on settings
+        if (tabBtnFeed) tabBtnFeed.classList.toggle("hidden", !enableFeedGroup);
+        if (tabBtnScore) tabBtnScore.classList.toggle("hidden", !enableSc);
+        if (tabBtnPoll) tabBtnPoll.classList.toggle("hidden", !enablePoll);
+        if (tabBar) tabBar.classList.toggle("hidden", enabledSlides.length <= 1);
+
+        // Highlight active tab button
+        if (tabBar) {
+          const buttons = tabBar.querySelectorAll("[data-insight-tab]");
+          buttons.forEach(btn => {
+            const tabVal = btn.getAttribute("data-insight-tab");
+            btn.classList.toggle("active", tabVal === currentInsightTab);
+          });
         }
+
+        // Update auto status label
+        if (statusEl) {
+          const labelSpan = statusEl.querySelector(".insight-auto-label");
+          if (currentInsightTab === "auto" && enabledSlides.length > 1) {
+            const slideNames = { feed: "ผู้ส่งล่าสุด", score: "สถิติคะแนน", poll: "ผลโพล AI" };
+            if (labelSpan) {
+              labelSpan.textContent = `กำลังแสดง: ${slideNames[effectiveTab] || ""} (${autoSlideIndex + 1}/${enabledSlides.length})`;
+            }
+            statusEl.classList.remove("opacity-40");
+          } else {
+            if (labelSpan) labelSpan.textContent = "โหมดกำหนดเอง";
+            statusEl.classList.add("opacity-40");
+          }
+        }
+
+        const showFeedNow = enableFeedGroup && (effectiveTab === "all" || effectiveTab === "feed");
+        const showScNow = enableSc && (effectiveTab === "all" || effectiveTab === "score");
+        const showPollNow = enablePoll && (effectiveTab === "all" || effectiveTab === "poll");
+
+        if (feedGroupEl) feedGroupEl.classList.toggle("hidden", !showFeedNow);
+        if (paceEl) paceEl.classList.toggle("hidden", !enablePace);
+        if (lfEl) lfEl.classList.toggle("hidden", !enableLf);
+        if (scEl) scEl.classList.toggle("hidden", !showScNow);
+        if (pollEl) pollEl.classList.toggle("hidden", !showPollNow);
 
         if (rightPane) rightPane.classList.toggle("hidden", !showRightPane);
         if (leftCol) {
           leftCol.className = showRightPane
-            ? "lg:col-span-5 flex flex-col justify-between gap-3"
-            : "lg:col-span-12 flex flex-col justify-between gap-3";
+            ? "lg:col-span-5 flex flex-col justify-between gap-3.5"
+            : "lg:col-span-12 flex flex-col justify-between gap-3.5";
         }
       });
     }
@@ -1710,11 +1922,11 @@
         if (latestEl) latestEl.textContent = "-";
       }
 
-      // 3. Recent Submissions Live Feed (5 คนล่าสุด - กระชับ ไม่ต้อง Scroll)
+      // 3. Recent Submissions Live Feed (5 คนล่าสุด - ตัวอักษรใหญ่อ่านง่ายจากระยะไกล)
       const feedListEl = document.getElementById(`live-feed-list-${setId}`);
       if (feedListEl) {
         if (parsedRows.length === 0) {
-          feedListEl.innerHTML = `<div class="text-xs sub-note-text py-4 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>`;
+          feedListEl.innerHTML = `<div class="insight-body sub-note-text py-6 text-center">ยังไม่มีข้อมูลผู้ส่งคำตอบ</div>`;
         } else {
           const recentFive = [...parsedRows].reverse().slice(0, 5);
           feedListEl.innerHTML = recentFive.map((item, i) => {
@@ -1723,25 +1935,27 @@
             let name = nameKey ? String(row[nameKey] ?? "").trim() : "";
             if (!name) name = `ผู้ร่วมกิจกรรม #${item.idx}`;
             const timeLabel = item.date
-              ? `${item.date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} • ${formatRelativeTime(item.date)}`
-              : `#${item.idx}`;
-            const badgeColor = i === 0 ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/30" : "bg-slate-500/15 sub-note-text border-transparent";
+              ? `${item.date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น. • ${formatRelativeTime(item.date)}`
+              : `ลำดับที่ #${item.idx}`;
+            const badgeColor = i === 0
+              ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40"
+              : "bg-slate-500/15 sub-note-text border-white/10";
             return `
-              <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-slate-500/10 border border-white/5">
-                <div class="flex items-center gap-2 min-w-0">
-                  <span class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center flex-shrink-0 border ${badgeColor}">
+              <div class="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-slate-500/10 border border-white/5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="w-8 h-8 rounded-full insight-sub font-bold flex items-center justify-center flex-shrink-0 border ${badgeColor}">
                     ${i === 0 ? "★" : i + 1}
                   </span>
-                  <span class="text-xs font-medium sub-label-text truncate">${escapeHtml(name)}</span>
+                  <span class="insight-body font-semibold sub-label-text truncate">${escapeHtml(name)}</span>
                 </div>
-                <span class="text-[10px] sub-note-text flex-shrink-0">${escapeHtml(timeLabel)}</span>
+                <span class="insight-sub sub-note-text font-medium flex-shrink-0">${escapeHtml(timeLabel)}</span>
               </div>
             `;
           }).join("");
         }
       }
 
-      // 4. Score Overview & Distribution
+      // 4. Score Overview & Distribution (ตัวเลขใหญ่เต็มตา + แถบสีหนาชัดเจน)
       const maxScore = getMaxScore(setId);
       const maxBadge = document.getElementById(`score-max-badge-${setId}`);
       const avgEl = document.getElementById(`score-avg-${setId}`);
@@ -1767,7 +1981,7 @@
         if (avgEl) avgEl.textContent = "-";
         if (maxEl) maxEl.textContent = "-";
         if (minEl) minEl.textContent = "-";
-        if (distEl) distEl.innerHTML = `<div class="text-xs sub-note-text py-2 text-center">ยังไม่มีข้อมูลคะแนนในชุดนี้</div>`;
+        if (distEl) distEl.innerHTML = `<div class="insight-body sub-note-text py-4 text-center">ยังไม่มีข้อมูลคะแนนในชุดนี้</div>`;
       } else {
         const sum = scores.reduce((a, b) => a + b, 0);
         const avg = (sum / scores.length).toFixed(1);
@@ -1785,21 +1999,21 @@
         const lowCount = scores.filter(s => s < midMin).length;
 
         const tiers = [
-          { label: `${highMin}–${maxScore} (ดีเยี่ยม)`, count: highCount, color: "bg-emerald-400" },
-          { label: `${midMin}–${Math.max(midMin, highMin - 1)} (ปานกลาง)`, count: midCount, color: "bg-amber-400" },
-          { label: `0–${Math.max(0, midMin - 1)} (ควรทบทวน)`, count: lowCount, color: "bg-rose-400" }
+          { label: `ช่วง ${highMin}–${maxScore} คะแนน (ดีเยี่ยม)`, count: highCount, color: "bg-emerald-400" },
+          { label: `ช่วง ${midMin}–${Math.max(midMin, highMin - 1)} คะแนน (ปานกลาง)`, count: midCount, color: "bg-amber-400" },
+          { label: `ช่วง 0–${Math.max(0, midMin - 1)} คะแนน (ควรทบทวน)`, count: lowCount, color: "bg-rose-400" }
         ];
 
         if (distEl) {
           distEl.innerHTML = tiers.map(t => {
             const pct = Math.round((t.count / scores.length) * 100);
             return `
-              <div class="space-y-0.5">
-                <div class="flex justify-between text-[11px]">
-                  <span class="sub-label-text font-medium">${escapeHtml(t.label)}</span>
-                  <span class="sub-note-text">${t.count.toLocaleString("th-TH")} คน (${pct}%)</span>
+              <div class="space-y-1.5">
+                <div class="flex justify-between items-center insight-body">
+                  <span class="sub-label-text font-semibold">${escapeHtml(t.label)}</span>
+                  <span class="sub-note-text font-bold">${t.count.toLocaleString("th-TH")} คน (${pct}%)</span>
                 </div>
-                <div class="w-full h-1.5 rounded-full bg-slate-500/20 overflow-hidden">
+                <div class="w-full h-3.5 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
                   <div class="${t.color} h-full rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
                 </div>
               </div>
@@ -1808,14 +2022,14 @@
         }
       }
 
-      // 5. AI Adoption Survey / Poll Highlight
+      // 5. AI Adoption Survey / Poll Highlight (ตัวอักษรใหญ่ แถบกราฟหนา อ่านง่ายชัดเจน)
       const pollTitleEl = document.getElementById(`poll-title-${setId}`);
       const pollVotesEl = document.getElementById(`poll-total-votes-${setId}`);
       const pollBarsEl = document.getElementById(`poll-bars-${setId}`);
 
       if (rows.length === 0) {
         if (pollVotesEl) pollVotesEl.textContent = "0 คำตอบ";
-        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="text-xs sub-note-text py-2 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>`;
+        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="insight-body sub-note-text py-6 text-center">รอข้อมูลคำตอบจากแบบสอบถาม</div>`;
         return;
       }
 
@@ -1829,7 +2043,7 @@
       if (!pollKey) {
         if (pollTitleEl) pollTitleEl.textContent = "สรุปผลโพลคำถามไฮไลต์";
         if (pollVotesEl) pollVotesEl.textContent = "0 คำตอบ";
-        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="text-xs sub-note-text py-2 text-center">ไม่พบคอลัมน์คำถามโพลในชุดข้อมูลนี้</div>`;
+        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="insight-body sub-note-text py-6 text-center">ไม่พบคอลัมน์คำถามโพลในชุดข้อมูลนี้</div>`;
         return;
       }
 
@@ -1853,19 +2067,19 @@
       if (pollVotesEl) pollVotesEl.textContent = `ผู้ตอบ ${totalRespondentsWithAnswer.toLocaleString("th-TH")} คน`;
 
       if (countsMap.size === 0) {
-        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="text-xs sub-note-text py-2 text-center">ยังไม่มีผู้เลือกคำตอบในข้อนี้</div>`;
+        if (pollBarsEl) pollBarsEl.innerHTML = `<div class="insight-body sub-note-text py-6 text-center">ยังไม่มีผู้เลือกคำตอบในข้อนี้</div>`;
       } else {
         const sortedChoices = Array.from(countsMap.entries()).sort((a, b) => b[1] - a[1]).slice(0, 4);
         if (pollBarsEl) {
           pollBarsEl.innerHTML = sortedChoices.map(([choice, count]) => {
             const pct = totalRespondentsWithAnswer > 0 ? Math.round((count / totalRespondentsWithAnswer) * 100) : 0;
             return `
-              <div class="space-y-0.5">
-                <div class="flex justify-between items-center gap-2 text-[11px]">
-                  <span class="sub-label-text font-medium truncate" title="${escapeHtml(choice)}">${escapeHtml(choice)}</span>
-                  <span class="sub-note-text flex-shrink-0 font-mono">${count.toLocaleString("th-TH")} คน (${pct}%)</span>
+              <div class="space-y-1.5">
+                <div class="flex justify-between items-center gap-3 insight-body">
+                  <span class="sub-label-text font-semibold truncate" title="${escapeHtml(choice)}">${escapeHtml(choice)}</span>
+                  <span class="sub-note-text flex-shrink-0 font-bold">${count.toLocaleString("th-TH")} คน (${pct}%)</span>
                 </div>
-                <div class="w-full h-2 rounded-full bg-slate-500/20 overflow-hidden">
+                <div class="w-full h-3.5 rounded-full bg-slate-500/20 overflow-hidden p-0.5">
                   <div class="h-full rounded-full transition-all duration-500" style="width: ${Math.min(100, pct)}%; background-color: var(--color-set-${setId});"></div>
                 </div>
               </div>
@@ -1931,14 +2145,17 @@
         sec1.classList.remove("hidden");
         sec2.classList.remove("hidden");
         grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-5 w-full max-w-7xl mx-auto transition-all duration-300";
+        stopInsightAutoTimer();
       } else if (mode === "set1") {
         sec1.classList.remove("hidden");
         sec2.classList.add("hidden");
-        grid.className = "grid grid-cols-1 gap-5 w-full max-w-7xl mx-auto transition-all duration-300";
+        grid.className = "grid grid-cols-1 gap-5 w-full mx-auto transition-all duration-300";
+        if (currentInsightTab === "auto") startInsightAutoTimer();
       } else if (mode === "set2") {
         sec1.classList.add("hidden");
         sec2.classList.remove("hidden");
-        grid.className = "grid grid-cols-1 gap-5 w-full max-w-7xl mx-auto transition-all duration-300";
+        grid.className = "grid grid-cols-1 gap-5 w-full mx-auto transition-all duration-300";
+        if (currentInsightTab === "auto") startInsightAutoTimer();
       }
 
       applyInsightVisibility();
