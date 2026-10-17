@@ -82,6 +82,17 @@
       border-color: #f59e0b;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.18);
     }
+    /* เมื่อดูชุดเดียวแบบไม่มีรายละเอียดเพิ่มเติม ให้ 4 กล่องสถิติเป็นสี่เหลี่ยมจัตุรัสและจัดกลางอย่างกระชับ */
+    .single-compact-mode .stat-card-box {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+    }
+    .single-compact-mode #left-col-1,
+    .single-compact-mode #left-col-2 {
+      margin: 0 auto;
+      width: 100%;
+      max-width: min(640px, 72vh);
+    }
     html {
       font-size: var(--font-scale);
     }
@@ -333,35 +344,43 @@
               <div id="left-col-1" class="lg:col-span-12 flex flex-col justify-between gap-3.5">
                 <div class="grid grid-cols-2 gap-3.5 flex-1">
                   <!-- 1. จำนวนทั้งหมด ชุดที่ 1 -->
-                  <button onclick="openConfigForSet(1)" class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 1">
+                  <button onclick="openConfigForSet(1)" class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 1">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                     </div>
-                    <div id="stat-participants-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-participants-1" class="num-glow font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="participants-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </button>
                   <!-- 2. กำลังทำ ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
                     </div>
-                    <div id="stat-inprogress-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-inprogress-1" class="num-glow font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="inprogress-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 3. เสร็จแล้ว ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                     </div>
-                    <div id="stat-submissions-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-submissions-1" class="num-glow font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    </div>
                     <div class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 1 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
                     </div>
-                    <div id="stat-percent-1" class="num-glow font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-percent-1" class="num-glow font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="percent-note-1" class="sub-note-text" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
                   </div>
                 </div>
@@ -526,35 +545,43 @@
               <div id="left-col-2" class="lg:col-span-12 flex flex-col justify-between gap-3.5">
                 <div class="grid grid-cols-2 gap-3.5 flex-1">
                   <!-- 1. จำนวนทั้งหมด ชุดที่ 2 -->
-                  <button onclick="openConfigForSet(2)" class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 2">
+                  <button onclick="openConfigForSet(2)" class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between" title="กดเพื่อแก้ไขจำนวนทั้งหมดชุดที่ 2">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-users-three text-pink-400"></i><span>จำนวนทั้งหมด</span>
                     </div>
-                    <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-participants-2" class="num-glow-cyan font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="participants-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </button>
                   <!-- 2. กำลังทำ ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-hourglass-medium text-amber-400"></i><span>กำลังทำ</span>
                     </div>
-                    <div id="stat-inprogress-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-inprogress-2" class="num-glow-cyan font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="inprogress-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 3. เสร็จแล้ว ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-paper-plane-tilt text-sky-400"></i><span>เสร็จแล้ว</span>
                     </div>
-                    <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-submissions-2" class="num-glow-cyan font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">0</div>
+                    </div>
                     <div class="sub-note-text" style="font-size: var(--size-unit-label);">คน</div>
                   </div>
                   <!-- 4. เปอร์เซ็นต์ที่เสร็จ ชุดที่ 2 -->
-                  <div class="sub-card rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
+                  <div class="sub-card stat-card-box rounded-2xl p-4 sm:p-5 text-center transition flex flex-col justify-between">
                     <div class="flex items-center justify-center gap-1.5 sub-label-text font-medium" style="font-size: var(--size-metric-label);">
                       <i class="ph-bold ph-chart-pie-slice text-emerald-400"></i><span>เสร็จแล้ว (%)</span>
                     </div>
-                    <div id="stat-percent-2" class="num-glow-cyan font-bold leading-none my-1.5" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    <div class="flex-1 flex items-center justify-center my-1">
+                      <div id="stat-percent-2" class="num-glow-cyan font-bold leading-none" style="font-size: var(--size-stat-number);" data-value="0">-</div>
+                    </div>
                     <div id="percent-note-2" class="sub-note-text" style="font-size: var(--size-unit-label);">เปอร์เซ็นต์</div>
                   </div>
                 </div>
@@ -1714,6 +1741,28 @@
             ? activeSlideInAuto
             : currentInsightTab;
 
+      const isSingleMode = currentViewMode === "set1" || currentViewMode === "set2";
+      const activeSingleSetId = currentViewMode === "set1" ? 1 : currentViewMode === "set2" ? 2 : null;
+      let singleHasRightPane = false;
+      if (activeSingleSetId) {
+        const enableFeedGroup = isInsightEnabled("pace") || isInsightEnabled("live_feed");
+        const enableSc = isInsightEnabled("score");
+        const enablePoll = isInsightEnabled("poll");
+        singleHasRightPane = enableFeedGroup || enableSc || enablePoll;
+      }
+
+      const grid = document.getElementById("sets-grid");
+      if (grid) {
+        if (currentViewMode === "both") {
+          grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-5 w-full max-w-7xl mx-auto transition-all duration-300";
+        } else if (singleHasRightPane) {
+          grid.className = "grid grid-cols-1 gap-5 w-full max-w-[96vw] xl:max-w-[1760px] mx-auto transition-all duration-300";
+        } else {
+          // โหมดดูชุดเดียวแบบไม่มีรายละเอียดเพิ่มเติม: จัดกลางและจำกัดความกว้างให้กระชับ เพื่อให้ 4 กล่องเป็นสี่เหลี่ยมจัตุรัส
+          grid.className = "grid grid-cols-1 gap-5 w-full max-w-2xl xl:max-w-3xl mx-auto transition-all duration-300";
+        }
+      }
+
       [1, 2].forEach(setId => {
         const isSingleThisSet =
           (currentViewMode === "set1" && setId === 1) || (currentViewMode === "set2" && setId === 2);
@@ -1731,6 +1780,7 @@
         const tabBtnScore = document.getElementById(`tab-btn-score-${setId}`);
         const tabBtnPoll = document.getElementById(`tab-btn-poll-${setId}`);
         const statusEl = document.getElementById(`insight-slide-status-${setId}`);
+        const secEl = document.getElementById(`section-set${setId}`);
 
         const showProgress = isSingleThisSet && isInsightEnabled("progress");
         const enablePace = isSingleThisSet && isInsightEnabled("pace");
@@ -1739,6 +1789,11 @@
         const enableSc = isSingleThisSet && isInsightEnabled("score");
         const enablePoll = isSingleThisSet && isInsightEnabled("poll");
         const showRightPane = enableFeedGroup || enableSc || enablePoll;
+
+        const isCompactSingle = isSingleThisSet && !showRightPane;
+        if (secEl) {
+          secEl.classList.toggle("single-compact-mode", isCompactSingle);
+        }
 
         if (progEl) progEl.classList.toggle("hidden", !showProgress);
 
@@ -2139,22 +2194,18 @@
 
       const sec1 = document.getElementById("section-set1");
       const sec2 = document.getElementById("section-set2");
-      const grid = document.getElementById("sets-grid");
 
       if (mode === "both") {
         sec1.classList.remove("hidden");
         sec2.classList.remove("hidden");
-        grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-5 w-full max-w-7xl mx-auto transition-all duration-300";
         stopInsightAutoTimer();
       } else if (mode === "set1") {
         sec1.classList.remove("hidden");
         sec2.classList.add("hidden");
-        grid.className = "grid grid-cols-1 gap-5 w-full mx-auto transition-all duration-300";
         if (currentInsightTab === "auto") startInsightAutoTimer();
       } else if (mode === "set2") {
         sec1.classList.add("hidden");
         sec2.classList.remove("hidden");
-        grid.className = "grid grid-cols-1 gap-5 w-full mx-auto transition-all duration-300";
         if (currentInsightTab === "auto") startInsightAutoTimer();
       }
 
